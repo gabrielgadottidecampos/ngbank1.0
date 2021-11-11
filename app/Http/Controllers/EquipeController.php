@@ -62,6 +62,7 @@ class EquipeController extends Controller
      */
     public function destroy(Equipe $equipe)
     {
-        //
+        $equipe->delete();
+        return  ['msg' => 'A Equipe foi removida com sucesso'];
     }
 }
