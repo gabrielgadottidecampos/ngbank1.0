@@ -14,7 +14,8 @@ class EquipeController extends Controller
      */
     public function index()
     {
-        //
+        $equipes = Equipe::all();
+        return $equipes;
     }
 
     /**
@@ -37,7 +38,7 @@ class EquipeController extends Controller
      */
     public function show(Equipe $equipe)
     {
-        //
+        return $equipe;
     }
 
     /**
@@ -49,7 +50,7 @@ class EquipeController extends Controller
      */
     public function update(Request $request, Equipe $equipe)
     {
-        //
+
     }
 
     /**
