@@ -50,7 +50,8 @@ class EquipeController extends Controller
      */
     public function update(Request $request, Equipe $equipe)
     {
-
+        $equipe->update($request->all());
+        return $equipe;
     }
 
     /**
