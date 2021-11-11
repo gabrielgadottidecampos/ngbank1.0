@@ -52,9 +52,9 @@ class EquipeController extends Controller
     {
         $equipe = $this->equipe->find($id);
         if($equipe === null){ // validação para verificar se o resquist é valido
-            return  ['erro' => 'Recursos pesquisado não existe'];
+            return  response()->json(['erro' => 'Recursos pesquisado não existe'],404);
         }
-        return $equipe;
+        return response()->json($equipe,200);
     }
     // fim metodo show -------------------------------------------------------------------------------------------------
 
@@ -71,10 +71,10 @@ class EquipeController extends Controller
         $equipe = $this->equipe->find($id);
 
         if($equipe === null){ // validação para verificar se o resquist é valido
-            return ['eroo' => 'Impossível realizar a atualização. O recurso solicitado não existe'];
+            return response()->json(['eroo' => 'Impossível realizar a atualização. O recurso solicitado não existe',404]);
         }
         $equipe->update($request->all());
-        return $equipe;
+        return response()->json($equipe,200);
     }
     // fim metodo update -----------------------------------------------------------------------------------------------
 
@@ -89,10 +89,10 @@ class EquipeController extends Controller
     {
         $equipe = $this->equipe->find($id);
         if($equipe === null){ // validação para verificar se o resquist é valido
-            return ['eroo' => 'Impossível realizar a exclusão. O recurso solicitado não existe'];
+            return response()->json(['eroo' => 'Impossível realizar a exclusão. O recurso solicitado não existe'],404);
         }
         $equipe->delete();
-        return  ['msg' => 'A Equipe foi removida com sucesso'];
+        return response()->json( ['msg' => 'A Equipe foi removida com sucesso'],200);
     }
     // fim metodo destroy ----------------------------------------------------------------------------------------------
 }
