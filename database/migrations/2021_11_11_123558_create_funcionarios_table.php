@@ -15,8 +15,14 @@ class CreateFuncionariosTable extends Migration
     {
         Schema::create('funcionarios', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('equipe_id');
+            $table->string('nome', 100);
+            $table->string('imagem', 100);
+            $table->dateTime('data_nascimento');
             $table->timestamps();
-        });
+
+            $table->foreign('equipe_id')->references('id')->on('equipes');
+    });
     }
 
     /**
