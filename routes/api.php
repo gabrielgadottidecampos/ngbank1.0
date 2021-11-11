@@ -13,3 +13,8 @@ Route::apiResource('equipe','App\Http\Controllers\EquipeController'); // rota pa
 Route::apiResource('funcionario','App\Http\Controllers\FuncionarioController'); // rota para funcionarios
 Route::apiResource('venda','App\Http\Controllers\VendaController');//rota para vendas
 // fim rotas do app ____________________________________________________________________________________________________
+
+Route::post('login', 'App\Http\Controllers\AuthController@login');
+Route::post('logout', 'App\Http\Controllers\AuthController@logout');
+Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');
+Route::post('me', 'App\Http\Controllers\AuthController@me');
