@@ -25,7 +25,8 @@ class EquipeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $equipe = Equipe::create($request->all()); // inseri no banco as informações do request na tabela equipe
+        return $equipe;
     }
 
     /**
