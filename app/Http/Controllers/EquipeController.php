@@ -51,6 +51,9 @@ class EquipeController extends Controller
     public function show($id)
     {
         $equipe = $this->equipe->find($id);
+        if($equipe === null){ // validação para verificar se o resquist é valido
+            return  ['erro' => 'Recursos pesquisado não existe'];
+        }
         return $equipe;
     }
     // fim metodo show -------------------------------------------------------------------------------------------------
@@ -66,6 +69,10 @@ class EquipeController extends Controller
     public function update(Request $request, $id)
     {
         $equipe = $this->equipe->find($id);
+
+        if($equipe === null){ // validação para verificar se o resquist é valido
+            return ['eroo' => 'Impossível realizar a atualização. O recurso solicitado não existe'];
+        }
         $equipe->update($request->all());
         return $equipe;
     }
@@ -81,6 +88,9 @@ class EquipeController extends Controller
     public function destroy($id)
     {
         $equipe = $this->equipe->find($id);
+        if($equipe === null){ // validação para verificar se o resquist é valido
+            return ['eroo' => 'Impossível realizar a exclusão. O recurso solicitado não existe'];
+        }
         $equipe->delete();
         return  ['msg' => 'A Equipe foi removida com sucesso'];
     }
