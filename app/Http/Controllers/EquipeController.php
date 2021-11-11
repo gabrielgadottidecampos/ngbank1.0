@@ -36,8 +36,17 @@ class EquipeController extends Controller
      */
     public function store(Request $request)
     {
+        $regras = [
+            'nome' => 'required',
+            'imagem' => 'required'
+        ];
+        $feedback = [
+            'required' => 'O campo :attribute é obrigatório'
+        ];
+
+        $request->validate($regras,$feedback);
         $equipe = $this->equipe->create($request->all());
-        return $equipe;
+        return response()->json($equipe,200);
     }
     // fim metodo store ------------------------------------------------------------------------------------------------
 
