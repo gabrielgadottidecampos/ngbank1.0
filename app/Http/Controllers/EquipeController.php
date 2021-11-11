@@ -77,8 +77,11 @@ class EquipeController extends Controller
         if($equipe === null){ // validação para verificar se o resquist é valido
             return response()->json(['eroo' => 'Impossível realizar a atualização. O recurso solicitado não existe',404]);
         }
+
+        $request->validate($equipe->rules(), $equipe->feedback()); // validação das regras
+
         $equipe->update($request->all());
-        return response()->json($equipe,200);
+        return response()->json($equipe,200); // retorno do resultado
     }
     // fim metodo update -----------------------------------------------------------------------------------------------
 
