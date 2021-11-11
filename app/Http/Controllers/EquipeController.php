@@ -78,7 +78,17 @@ class EquipeController extends Controller
             return response()->json(['eroo' => 'Impossível realizar a atualização. O recurso solicitado não existe',404]);
         }
 
-        $request->validate($equipe->rules(), $equipe->feedback()); // validação das regras
+        if($request->method() === 'PATCH'){
+            $regrasDimanicas = array();
+
+            foreach ($equipe->rules() as $input => $regra){
+
+                if(array_key_exists($input,$request->all())){
+                    $regrasDimanicas[$input] = $regra;
+                }
+            }
+            $request->validate($equipe->rules(), $equipe->feedback()); // validação das regras
+        }
 
         $equipe->update($request->all());
         return response()->json($equipe,200); // retorno do resultado
