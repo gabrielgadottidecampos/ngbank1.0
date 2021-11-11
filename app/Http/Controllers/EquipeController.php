@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EquipeController extends Controller
 {
@@ -72,26 +73,42 @@ class EquipeController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $equipe = $this->equipe->find($id);
-
-        if($equipe === null){ // validação para verificar se o resquist é valido
-            return response()->json(['eroo' => 'Impossível realizar a atualização. O recurso solicitado não existe',404]);
+        //validação do update **************
+        if($equipe === null){
+            return response()->json(['erro' => 'Impossivel realizar a solucitação. A Equipe pesquisado não existe'], 401);
         }
-
+        // validação do metodo da requisição para impor as regras e feedback *********
         if($request->method() === 'PATCH'){
-            $regrasDimanicas = array();
-
+            $regrasDinamicas = array();
             foreach ($equipe->rules() as $input => $regra){
-
-                if(array_key_exists($input,$request->all())){
-                    $regrasDimanicas[$input] = $regra;
+                if (array_key_exists($input,$request->all())){
+                    $regrasDinamicas[$input] = $regra;
                 }
             }
-            $request->validate($equipe->rules(), $equipe->feedback()); // validação das regras
+            $request->validate($regrasDinamicas, $this->equipe->feedback());
+        }else{
+            $request->validate($this->equipe->rules(), $this->equipe->feedback());
+        }
+        // remove o arquivo antigo caso o novo arquivo tenha sido enviado ***********
+        if($request->file('imagem')){
+            Storage::disk('public')->delete($equipe->imagem);
         }
 
-        $equipe->update($request->all());
-        return response()->json($equipe,200); // retorno do resultado
+        // salvando imagem ******************************************
+        $imagem = $request->file('imagem');
+        $imagem_urn = $imagem->store('imagens/equipes', 'public');
+
+        //preecher o objeto $equipe com os dados do request
+        $equipe->fill($request->all());
+        $equipe->imagem = $imagem_urn;
+        $equipe->save();
+        // $equipe->update([
+        //     'nome' => $request->nome,
+        //     'imagem' => $imagem_urn
+        // ]);
+        return response()->json($equipe, 200);
     }
     // fim metodo update -----------------------------------------------------------------------------------------------
 
@@ -104,12 +121,18 @@ class EquipeController extends Controller
      */
     public function destroy($id)
     {
+
         $equipe = $this->equipe->find($id);
-        if($equipe === null){ // validação para verificar se o resquist é valido
-            return response()->json(['eroo' => 'Impossível realizar a exclusão. O recurso solicitado não existe'],404);
+        // validação do metodo destroy ********
+        if($equipe === null){
+            return response()->json(['erro' => 'Impossivel excluir a equipe. A Equipe pesquisado não existe'],401);
         }
+
+        // remove o arquivo antigo caso o novo arquivo tenha sido enviado ***********
+        Storage::disk('public')->delete($equipe->imagem);
+
         $equipe->delete();
-        return response()->json( ['msg' => 'A Equipe foi removida com sucesso'],200);
+        return response()->json(['msg' => 'A Equipe foi removida com sucesso'],200);
     }
     // fim metodo destroy ----------------------------------------------------------------------------------------------
 }
