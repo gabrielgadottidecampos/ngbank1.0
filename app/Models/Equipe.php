@@ -30,4 +30,11 @@ class Equipe extends Model
         ];
     }
     // fim metodo criação de feedback-----------------------------------------------------------------------------------
+
+    //relecionamento entre marca e funcionario *************************************************************************
+    public function funcionarios()
+    {
+        //uma equipe possui muitos funcionarios ******************
+        return $this->hasMany('App\Models\Funcionario'); // um para muitos
+    }
 }

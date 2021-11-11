@@ -3,32 +3,54 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipe;
+use App\Repositories\EquipeRepository;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Type\Integer;
 use Illuminate\Support\Facades\Storage;
-
 class EquipeController extends Controller
 {
-    // metodo construtor ***********************************************************************************************
-    public function __construct(Equipe $equipe)
-    {
+    // contrutor para setar o classe Equipe
+    public function __construct(Equipe $equipe){
         $this->equipe = $equipe;
     }
-    // fim do metodo contrutor -----------------------------------------------------------------------------------------
 
-    // Metodo Index ****************************************************************************************************
+// metodo para listar todos os registros do banco **********************************************************************
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $equipes = $this->equipe->all();
-        return $equipes;
-    }
-    //Fim metodo index -------------------------------------------------------------------------------------------------
 
-    //Metodo Store *****************************************************************************************************
+        $equipeRepository = new EquipeRepository($this->equipe);
+
+
+        if($request->has('atributos_funcionarios')){
+            $atributos_funcionarios = $request->atributos_funcionarios;
+            $equipeRepository->selectAtributosRegistrosRelacionados('funcionarios:id,'.$atributos_funcionarios);
+
+        }else{
+            $equipeRepository->selectAtributosRegistrosRelacionados('funcionarios');
+        }
+
+
+        if($request->has('filtro')){
+
+            $equipeRepository->filtro($request->filtro);
+        }
+
+        if($request->has('atributos')){
+            $atributos = $request->atributos;
+            $equipeRepository->selectAtributos($request->atributos);
+        }
+//------------------------------------------------------------------
+
+        return response()->json($equipeRepository->getResultado(),200);
+
+    }
+
+// metodo para adicionar um registro no banco **************************************************************************
     /**
      * Store a newly created resource in storage.
      *
@@ -37,38 +59,46 @@ class EquipeController extends Controller
      */
     public function store(Request $request)
     {
+        // regras e feedbak de validações *************************
+
+        $request->validate($this->equipe->rules(), $this->equipe->feedback());
+
+        // salvando imagem ******************************************
+        $imagem = $request->file('imagem');
+        $imagem_urn = $imagem->store('imagens/equipes', 'public');
 
 
-        $request->validate($this->equipe->rules(), $this->equipe->feedback()); // puxa da classe rules e feedback as regras
+        $equipe = $this->equipe->create([
+            'nome' => $request->nome,
+            'imagem' => $imagem_urn
+        ]);
+        return response()->json($equipe,201);
 
-        $equipe = $this->equipe->create($request->all());
-        return response()->json($equipe,200);
     }
-    // fim metodo store ------------------------------------------------------------------------------------------------
 
-    //Metodo Show ******************************************************************************************************
+    // metodo para buscar um registro no banco ****************************************************************************
     /**
      * Display the specified resource.
      *
-     * @param  integer
+     * @param  Integer
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $equipe = $this->equipe->find($id);
-        if($equipe === null){ // validação para verificar se o resquist é valido
-            return  response()->json(['erro' => 'Recursos pesquisado não existe'],404);
+        $equipe = $this->equipe->with('funcionarios')->find($id);
+        // validação da pesquisa ************************
+        if($equipe === null){
+            return response()->json(['erro' => 'A Equipe pesquisado não existe'],404);
         }
-        return response()->json($equipe,200);
+        return response()->json($equipe, 200);
     }
-    // fim metodo show -------------------------------------------------------------------------------------------------
 
-    //Metodo Update ****************************************************************************************************
+    // metodo para editar um registro no banco ****************************************************************************
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  integer
+     * @param  Integer
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -110,18 +140,16 @@ class EquipeController extends Controller
         // ]);
         return response()->json($equipe, 200);
     }
-    // fim metodo update -----------------------------------------------------------------------------------------------
 
-    // Metodo Destroy **************************************************************************************************
+    // metodo para deletar um registro do banco ***************************************************************************
     /**
      * Remove the specified resource from storage.
      *
-     * @param  integer
+     * @param  Integer
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-
         $equipe = $this->equipe->find($id);
         // validação do metodo destroy ********
         if($equipe === null){
@@ -134,5 +162,4 @@ class EquipeController extends Controller
         $equipe->delete();
         return response()->json(['msg' => 'A Equipe foi removida com sucesso'],200);
     }
-    // fim metodo destroy ----------------------------------------------------------------------------------------------
 }
