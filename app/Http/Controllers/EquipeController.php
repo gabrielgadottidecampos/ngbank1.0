@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 
 class EquipeController extends Controller
 {
+    // metodo construtor ***********************************************************************************************
+    public function __construct(Equipe $equipe)
+    {
+        $this->equipe = $equipe;
+    }
+    // fim do metodo contrutor -----------------------------------------------------------------------------------------
+
+    // Metodo Index ****************************************************************************************************
     /**
      * Display a listing of the resource.
      *
@@ -14,10 +22,12 @@ class EquipeController extends Controller
      */
     public function index()
     {
-        $equipes = Equipe::all();
+        $equipes = $this->equipe->all();
         return $equipes;
     }
+    //Fim metodo index -------------------------------------------------------------------------------------------------
 
+    //Metodo Store *****************************************************************************************************
     /**
      * Store a newly created resource in storage.
      *
@@ -26,43 +36,53 @@ class EquipeController extends Controller
      */
     public function store(Request $request)
     {
-        $equipe = Equipe::create($request->all()); // inseri no banco as informações do request na tabela equipe
+        $equipe = $this->equipe->create($request->all());
         return $equipe;
     }
+    // fim metodo store ------------------------------------------------------------------------------------------------
 
+    //Metodo Show ******************************************************************************************************
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Equipe  $equipe
+     * @param  integer
      * @return \Illuminate\Http\Response
      */
-    public function show(Equipe $equipe)
+    public function show($id)
     {
+        $equipe = $this->equipe->find($id);
         return $equipe;
     }
+    // fim metodo show -------------------------------------------------------------------------------------------------
 
+    //Metodo Update ****************************************************************************************************
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Equipe  $equipe
+     * @param  integer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Equipe $equipe)
+    public function update(Request $request, $id)
     {
+        $equipe = $this->equipe->find($id);
         $equipe->update($request->all());
         return $equipe;
     }
+    // fim metodo update -----------------------------------------------------------------------------------------------
 
+    // Metodo Destroy **************************************************************************************************
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Equipe  $equipe
+     * @param  integer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Equipe $equipe)
+    public function destroy($id)
     {
+        $equipe = $this->equipe->find($id);
         $equipe->delete();
         return  ['msg' => 'A Equipe foi removida com sucesso'];
     }
+    // fim metodo destroy ----------------------------------------------------------------------------------------------
 }
