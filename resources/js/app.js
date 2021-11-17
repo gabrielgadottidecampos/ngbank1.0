@@ -8,6 +8,16 @@ require('./bootstrap');
 
 window.Vue = require('vue').default;
 
+/*vueex
+
+ */
+import Vuex from "vuex";
+Vue.use(Vuex);
+const store = new Vuex.Store({
+    state:{
+        item: {}
+    }
+})
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -26,6 +36,9 @@ Vue.component('equipes-component', require('./components/Equipes.vue').default);
 Vue.component('card-component', require('./components/Card.vue').default);
 Vue.component('modal-component', require('./components/Modal.vue').default);
 Vue.component('alert-component', require('./components/Alert.vue').default);
+Vue.component('table-component', require('./components/table.vue').default);
+Vue.component('paginate-component', require('./components/Paginate').default);
+Vue.component('inputContainer-component', require('./components/InputContainer.vue').default);
 
 
 /**
@@ -33,7 +46,26 @@ Vue.component('alert-component', require('./components/Alert.vue').default);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+Vue.filter('formataDataTempoGlobal', function(d) {
+    if(!d) return ''
 
+    d = d.split('T')
+
+    let data = d[0]
+    let tempo = d[1]
+
+    //formatando a data
+    data = data.split('-')
+    data = data[2] + '/' + data[1] + '/' + data[0]
+
+    //formatar o tempo
+    tempo = tempo.split('.')
+    tempo = tempo[0]
+
+    return data + ' ' + tempo
+})
 const app = new Vue({
     el: '#app',
+    store
+
 });

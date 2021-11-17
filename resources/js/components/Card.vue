@@ -1,7 +1,7 @@
 <template>
 
     <div class="card mb-3">
-        <div class="card-header text-center">{{titulo}}</div>
+        <h5 class="card-header text-center bg-info text-white"><i class="fas fa-users"><b> {{titulo}}</b></i> </h5>
 
         <div class="card-body text-center">
             <slot name="conteudo"></slot>

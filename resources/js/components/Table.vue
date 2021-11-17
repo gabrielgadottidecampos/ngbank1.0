@@ -1,0 +1,67 @@
+<template>
+    <div>
+        <table class="table table-hover table-striped ">
+            <thead>
+            <tr>
+                <th scope="col" v-for="t, key in titulos" :key="key">{{ t.titulo }}</th>
+                <th v-if="visualizar.visivel || atualizar || remover.visivel">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="obj, chave in dadosFiltrados" :key="chave">
+                <td v-for="valor, chaveValor in obj" :key="chaveValor">
+                    <span v-if="titulos[chaveValor].tipo == 'texto'">{{ valor }}</span>
+                    <span v-if="titulos[chaveValor].tipo == 'data'">
+                            {{ valor | formataDataTempoGlobal }}
+                        </span>
+                    <span v-if="titulos[chaveValor].tipo == 'imagem'">
+                            <img :src="'/storage/'+valor" width="30" height="30">
+                        </span>
+                </td>
+                <!-- Botões de excluir e editar-->
+                <td v-if="visualizar.visivel || atualizar || remover.visivel">
+                    <button v-if="visualizar.visivel" class="btn btn-outline-secondary btn-sm" :data-toggle="visualizar.dataToggle":data-target="visualizar.dataTarget" @click="setStore(obj)">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button v-if="atualizar" class="btn btn-outline-info btn-sm">
+                        <i class="far fa-edit"></i>
+                        </button>
+                    <button v-if="remover.visivel" class="btn btn-outline-danger btn-sm" :data-toggle="remover.dataToggle":data-target="remover.dataTarget" @click="setStore(obj)">
+                        <i class="far fa-trash-alt"></i>
+                        </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</template>
+
+<script>
+export default {
+    props: ['dados', 'titulos', 'atualizar', 'visualizar', 'remover'],
+    methods: {
+        setStore(obj) {
+            this.$store.state.item = obj;
+        }
+    },
+    computed: {
+        dadosFiltrados() {
+
+            let campos = Object.keys(this.titulos)
+            let dadosFiltrados = []
+
+            this.dados.map((item, chave) => {
+
+                let itemFiltrado = {}
+                campos.forEach(campo => {
+
+                    itemFiltrado[campo] = item[campo] //utilizar a sintaxe de array para atribuir valores a objetos
+                })
+                dadosFiltrados.push(itemFiltrado)
+            })
+
+            return dadosFiltrados //retorne um array de objetos
+        }
+    }
+}
+</script>

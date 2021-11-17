@@ -46,7 +46,7 @@ class EquipeController extends Controller
         }
 //------------------------------------------------------------------
 
-        return response()->json($equipeRepository->getResultado(),200);
+        return response()->json($equipeRepository->getResultadoPaginado(20),200);
 
     }
 
