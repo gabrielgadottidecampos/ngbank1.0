@@ -15,7 +15,8 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 const store = new Vuex.Store({
     state:{
-        item: {}
+        item: {},
+        transacao:{ status: '', mensagem: ''}
     }
 })
 /**
@@ -39,6 +40,8 @@ Vue.component('alert-component', require('./components/Alert.vue').default);
 Vue.component('table-component', require('./components/table.vue').default);
 Vue.component('paginate-component', require('./components/Paginate').default);
 Vue.component('inputContainer-component', require('./components/InputContainer.vue').default);
+Vue.component('funcionarios-component', require('./components/Funcionarios.vue').default);
+Vue.component('botoes-component', require('./components/Botaos.vue').default);
 
 
 /**

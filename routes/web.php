@@ -23,3 +23,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/equipes', function (){
    return view('app.equipes');
 })->name('equipes')->middleware('auth');
+
+// rota para funcionarios **********************************************************************************************
+Route::get('/funcionarios', function (){
+    return view('app.funcionarios');
+})->name('funcionarios')->middleware('auth');
+// fim rotas para funcionarios -----------------------------------------------------------------------------------------

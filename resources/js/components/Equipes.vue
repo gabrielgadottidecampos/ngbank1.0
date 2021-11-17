@@ -1,7 +1,7 @@
 <template xmlns="http://www.w3.org/1999/html">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <!-- -->
                 <!-- Botão Adicionar ------------------------------------------------------------------------------- -->
                 <div class="d-md-flex justify-content-md-end mb-2">
@@ -15,7 +15,7 @@
                         <table-component
                             :dados="equipes.data"
                             :visualizar="{visivel: true, dataToggle: 'modal',dataTarget: '#modalEquipeVisualizar'}"
-                            :atualizar="true"
+                            :atualizar="{visivel: true, dataToggle: 'modal', dataTarget: '#modalEquipeAtualizar'}"
                             :remover="{visivel: true, dataToggle: 'modal',dataTarget: '#modalEquipeExcluir'}"
                             :titulos="{
                                 id: {titulo: 'ID', tipo: 'texto'},
@@ -114,8 +114,11 @@
 
         <!-- inicio modal Exclusão-->
         <modal-component id="modalEquipeExcluir" titulo="Visualizar Equipe">
-            <template v-slot:alertas></template>
-            <template v-slot:conteudo>
+            <template v-slot:alertas>
+                <alert-component tipo="success" titulo="Transação realizada com sucesso" :detalhes="$store.state.transacao" v-if="$store.state == 'sucesso'"></alert-component>
+                <alert-component tipo="danger" titulo="Erro na transação" :detalhes="$store.state.transacao" v-if="$store.state == 'erro'"></alert-component>
+            </template>
+            <template v-slot:conteudo v-if="$store.state.transacao.status != 'sucesso'">
                 <!-- inicio bloco visualização-->
                 <div class="container">
                     <div class="row">
@@ -140,7 +143,7 @@
             <!-- fim modal visualização-->
             <template v-slot:rodape>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal" @click="remover()">Remover</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal" @click="remover()" v-if="$store.state.transacao.status != 'sucesso'">Remover</button>
                     <button type="button" class="btn btn-outline-info" data-dismiss="modal" >Fechar</button>
 
                 </div>
@@ -148,7 +151,39 @@
         </modal-component>
         <!-- fim do modal Exclusão -->
 
+        <!-- modal Edição de equipe-->
+        <modal-component id="modalEquipeAtualizar" titulo="Atualização Equipe">
+            <!-- alertas template -->
+            <template v-slot:alertas>
+            </template>
+            <!-- fim alertas template -->
+            <!-- form modal -->
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <!-- input nome da equipe -->
+                    <input type="text" class="form-control" id="atualizarNome" placeholder="Nome da Equipe" v-model="$store.state.item.nome">
+                    <!-- fim input nome da equipe -->
+
+                    <!-- input imagem -->
+                    <div class="custom-file mt-3">
+                        <input type="file" class="custom-file-input" id="atualizarImagem" lang="pt"
+                               @change="carregarImagem($event)">
+                        <label class="custom-file-label" for="atualizarImagem">Selecione uma Imagem</label>
+                    </div>
+                    <!-- fim input imagem -->
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" @click="atualizar()">Atualizar</button>
+                </div>
+            </template>
+        </modal-component>
+        <!-- fim form modal Edição de equip -->
+
     </div>
+
 </template>
 
 <script>
@@ -179,6 +214,36 @@ export default {
         }
     },
     methods: {
+        atualizar(){
+            let formData = new FormData();
+            formData.append('_method', 'patch')
+            formData.append('nome', this.$store.state.item.nome)
+
+            if(this.arquivoImagem[0]) {
+                formData.append('imagem', this.arquivoImagem[0])
+            }
+
+            let url = this.urlBase + '/' + this.$store.state.item.id
+
+            let config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Accept': 'application/json',
+                    'Autorization': this.token
+                }
+            }
+
+            axios.post(url, formData, config)
+                .then(response => {
+                    console.log('Atualizado', response)
+                    //limpar o campo de seleção de arquivos
+                    atualizarImagem.value = ''
+                    this.carregarLista()
+                })
+                .catch(errors => {
+                    console.log('Erro de atualização', errors.response)
+                })
+        },
         remover() {
             let confirmacao = confirm('Tem certeza que deseja remover esse registro?')
 
@@ -201,10 +266,15 @@ export default {
             axios.post(url, formData, config)
                 .then(response => {
                     console.log('Registro removido com sucesso', response)
+
+                    this.$store.state.transacao.status = 'sucesso'
+                    this.$store.state.transacao.mensagem = response.data.msg
                     this.carregarLista()
                 })
                 .catch(errors => {
                     console.log('Houve um erro na tentiva de remoção do registro', errors.response)
+                    this.$store.state.transacao.status = 'erro'
+                    this.$store.state.transacao.mensagem = errors.response.data.erro
                 })
 
         },

@@ -105,39 +105,44 @@ class EquipeController extends Controller
     {
 
         $equipe = $this->equipe->find($id);
-        //validação do update **************
-        if($equipe === null){
-            return response()->json(['erro' => 'Impossivel realizar a solucitação. A Equipe pesquisado não existe'], 401);
+
+        if($equipe === null) {
+            return response()->json(['erro' => 'Impossível realizar a atualização. O recurso solicitado não existe'], 404);
         }
-        // validação do metodo da requisição para impor as regras e feedback *********
-        if($request->method() === 'PATCH'){
+
+        if($request->method() === 'PATCH') {
+
             $regrasDinamicas = array();
-            foreach ($equipe->rules() as $input => $regra){
-                if (array_key_exists($input,$request->all())){
+
+            //percorrendo todas as regras definidas no Model
+            foreach($equipe->rules() as $input => $regra) {
+
+                //coletar apenas as regras aplicáveis aos parâmetros parciais da requisição PATCH
+                if(array_key_exists($input, $request->all())) {
                     $regrasDinamicas[$input] = $regra;
                 }
             }
-            $request->validate($regrasDinamicas, $this->equipe->feedback());
-        }else{
-            $request->validate($this->equipe->rules(), $this->equipe->feedback());
-        }
-        // remove o arquivo antigo caso o novo arquivo tenha sido enviado ***********
-        if($request->file('imagem')){
-            Storage::disk('public')->delete($equipe->imagem);
+
+            $request->validate($regrasDinamicas, $equipe->feedback());
+
+        } else {
+            $request->validate($equipe->rules(), $equipe->feedback());
         }
 
-        // salvando imagem ******************************************
-        $imagem = $request->file('imagem');
-        $imagem_urn = $imagem->store('imagens/equipes', 'public');
-
-        //preecher o objeto $equipe com os dados do request
+        //preenchendo o objeto $marca com todos os dados do request
         $equipe->fill($request->all());
-        $equipe->imagem = $imagem_urn;
+
+        //se a imagem foi encaminhada na requisição
+        if($request->file('imagem')) {
+            //remove o arquivo antigo
+            Storage::disk('public')->delete($equipe->imagem);
+
+            $imagem = $request->file('imagem');
+            $imagem_urn = $imagem->store('imagens', 'public');
+            $equipe->imagem = $imagem_urn;
+        }
+
         $equipe->save();
-        // $equipe->update([
-        //     'nome' => $request->nome,
-        //     'imagem' => $imagem_urn
-        // ]);
         return response()->json($equipe, 200);
     }
 
