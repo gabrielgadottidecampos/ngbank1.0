@@ -1,106 +1,101 @@
 <template>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <!-- Botão adicionar funcionarios -->
-                <div class="d-md-flex justify-content-md-end mb-2">
-                    <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalFuncionario">
-                        <i class="fas fa-user-plus"></i>
-                    </button>
-                </div>
-                <!-- Fim Botão adicionar funcionarios -->
-                <!-- inicio card funcionario -->
-                <card-component titulo="Funcionarios">
-                    <!-- Inicio templete conteudo-->
-                    <template v-slot:conteudo>
-                        Conteudo aqui
-                    </template>
-                    <!--fim templete conteudo -->
-                    <!-- inicio template rodapé -->
-                    <template v-slot:rodape>
-                    </template>
-                    <!-- fim template rodapé -->
-                </card-component>
-                <!-- Fim Card Funcionario -->
-            </div>
+        <!-- Botão Adicionar ------------------------------------------------------------------------------- -->
+        <div class="d-md-flex justify-content-md-end mb-2">
+            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalEquipe">
+                <i class="fas fa-user-plus"></i>
+            </button>
         </div>
-        <!--Inicio modal cadastro funcionario -->
-        <modal-component id="modalFuncionario" titulo="Adicionar Funcionario">
-            <!--inicio do templete de alertas -->
-            <template v-slot:alertas>
-            </template>
-            <!--fim do templete de alertas -->
-            <!--Inicio do template conteudo -->
+        <!--fim botão adicionar ---------------------------------------------------------------------------- -->
+        <!-- inicio card componente *********************************************************************************-->
+        <card-component titulo="Funcionarios">
+            <!-- inicio do conteudo do card *************************************************************************-->
             <template v-slot:conteudo>
-                <form>
-                    <div class="form-group">
-                        <input-container-component titulo="Nome do Funcionario" id="novoNome" id-help="novoNomeHelp"
-                                                   texto-ajuda="Informe o nome do Funcionario">
-                            <input type="text" class="form-control" id="novoNome" aria-describedby="novoNomeHelp"
-                                   placeholder="Nome do Funcionario" v-model="nomeFuncionario">
-                        </input-container-component>
-                       <!-- ************************************************************************************************** -->
+                <table-component
+                    :dados="funcionarios"
+                    :visualizar="{visivel: true}"
+                    :atualizar="{visivel: true}"
+                    :remover="{visivel: true}"
+                    :titulos="{
+                                id: {titulo: 'ID', tipo: 'texto'},
+                                nome: {titulo: 'Nome', tipo: 'texto'},
+                                data_nascimento:{titulo: 'Data Nascimento',tipo:'texto'},
+                                imagem: {titulo: 'Imagem', tipo: 'imagem'},
+                                created_at: {titulo: 'Criação', tipo: 'data'},
+                            }">
 
-                    </div>
-                    <!--inicio div de seleção de imagem -->
-                    <div class="form-group">
-                        <input-container-component titulo="Imagem" id="novoImagem" id-help="novoImagemHelp"
-                                                   texto-ajuda="Selecione uma imagem no formato PNG">
-                            <input type="file" class="form-control-file" id="novoImagem"
-                                   aria-describedby="novoImagemHelp" placeholder="Selecione uma imagem"
-                                   @change="carregarImagem($event)">
-                        </input-container-component>
-                        {{ arquivoImagem }}
-                    </div>
-                    <!--Fim div de seleção de imagem -->
-                    <!-- inicio div data venda -->
-                    <div class="form-group">
-                        <input-container-component titulo="Dt Nascimento" id="novaData" id-help="novaDataHelp"
-                                                   texto-ajuda="Informe a data de nascimento">
-                            <input type="text" class="form-control" id="novaData" aria-describedby="novaDataHelp"
-                                   placeholder="data de Aniversario" v-model="dtNasdcimento">
-                        </input-container-component>
-                        {{ dtNasdcimento }}
-                    </div>
-                    <!-- fim div data venda -->
-                    <!-- inicio seleção de equipes -->
-                    <div class="form-group">
-                        <label>Selecione uma Equipe</label>
-                        <select id="inputState" class="form-control" @select="setStore(obj)">
-                            <option selected>Equipes</option>
-                            <option v-for="obj in teste">{{obj.nome}}</option>
-                        </select>
-                    </div>
+                </table-component>
 
-                    <!-- fim seleção de equipes -->
-                </form>
+                {{funcionarios.data}}
             </template>
-            <!--Fim do template conteudo -->
+            <!-- fim do conteudo do card ------------------------------------------------------------------------------>
+            <!-- inicio do conteudo do rodape ***********************************************************************-->
+            <template v-slot:rodape>
 
+            </template>
+            <!-- fim do card do rodape -------------------------------------------------------------------------------->
+        </card-component>
+        <!-- fim card componente ************************************************************************************-->
+        <!-- modal adicionar Funcionario ******************************************************************************* -->
+        <modal-component id="modalEquipe" titulo="Adicionar Funcionario">
+            <!-- alertas template -->
+            <template v-slot:alertas>
+                <alert-component tipo="success" :detalhes="transacaoDetalhes" titulo="Cadastro realizado com sucesso"
+                                 v-if="transacaoStatus == 'adicionado'">
+
+                </alert-component>
+                <alert-component tipo="danger" :detalhes="transacaoDetalhes" titulo="Erro ao tentar cadastrar a equipe"
+                                 v-if="transacaoStatus == 'erro'">
+
+                </alert-component>
+            </template>
+            <!-- fim alertas template -->
+            <!-- form modal -->
+            <template v-slot:conteudo>
+
+                <div class="mb-3">
+                    <label class="form-label">Nome</label>
+                    <input type="text" class="form-control" placeholder="Digite um nome" v-model="nomeFuncionario">
+                    {{ nomeFuncionario }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Data de Naascimento</label>
+                    <input type="text" class="form-control" placeholder="Digite a data de nascimento"
+                           v-model="data_nascimento">
+                    {{ data_nascimento }}
+                </div>
+
+                <div class="custom-file mt-3">
+                    <input type="file" class="custom-file-input" id="novaImagem" lang="pt"
+                           @change="carregarImagem($event)">
+                    <label class="custom-file-label" for="novaImagem">Selecione uma Imagem</label>
+                    {{ arquivoImagem }}
+                </div>
+
+                <div class="input-group mb-6 mt-3">
+                    <label class="input-group-text">Equipes</label>
+                    <select class="form-select " @change="onChangeMethod($event)">
+                        <option selected>Selecione uma Equipe</option>
+                        <option v-for="option in teste.data" v-bind:value="option.id">{{ option.nome }}</option>
+                    </select>
+                </div>
+
+            </template>
             <template v-slot:rodape>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" @click=" salvar()">Salvar</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-outline-success" @click="salvar()">Salvar</button>
                 </div>
             </template>
         </modal-component>
-        <!--Fim modal cadastro funcionario -->
-
-        <!--Inicio modal visualizar funcionario -->
-        <!--Fim modal visualizar funcionario -->
-        <!--Inicio modal editar funcionario -->
-        <!--Fim modal editar funcionario -->
-        <!--Inicio modal Excluir funcionario -->
-        <!--Fim modal Excluir Funcionario -->
-
+        <!-- fim form modal adicionar funcionario ------------------------------------------------------------------------->
     </div>
 </template>
-
+<!-- inicio dos scripts *********************************************************************************************-->
 <script>
 export default {
-
     computed: {
-
+// evitando erro de token no navegador *********************************************************************************
         token() {
 
             let token = document.cookie.split(';').find(indice => {
@@ -113,55 +108,101 @@ export default {
             return token
         }
     },
-        data() {
-            return {
-                urlBaseEquipe: 'http://127.0.0.1:8000/api/v1/equipe',
-                urlBase: 'http://127.0.0.1:8000/api/v1/funcionario',
-                idEquipe: '',
-                nomeFuncionario: '',
-                dtNasdcimento: '',
-                arquivoImagem: [],
-                equipes: [],
-                teste:[]
-            }
+// fim evitando erro de token no navegador -----------------------------------------------------------------------------
+// inicio Data *********************************************************************************************************
+    data() {
+        return {
+            urlBase: 'http://127.0.0.1:8000/api/v1/equipe',
+            urlBaseFuncionario: 'http://127.0.0.1:8000/api/v1/funcionario',
+            teste: [],
+            arquivoImagem: [],
+            equipe_id: [],
+            nomeFuncionario: '',
+            data_nascimento: [],
+            transacaoDetalhes: [],
+            transacaoStatus: '',
+            funcionarios: [],
+            equipe:[],
+
+        }
+    },
+// Fim Data ------------------------------------------------------------------------------------------------------------
+// inicio metodos ******************************************************************************************************
+    methods: {
+// função carregar lista ***********************************************************************************************
+        carregarLista() {
+            axios.get(this.urlBase)
+                .then(response => {
+                    console.log(this.teste = response.data)
+                })
+                .catch(errors => {
+                    console.log(errors)
+                })
         },
-        methods: {
+        onChangeMethod(event) {
+            //  console.log(event.target.value);
+            this.equipe_id = event.target.value;
+            console.log(this.equipe_id);
 
-        //**************************************************************************************************************
-            carregarListaEquipe() {
+        },
+// fim função carregar lista -------------------------------------------------------------------------------------------
+// inicio função listar funcionario ************************************************************************************
+        carregarListaFuncionario() {
+            axios.get(this.urlBaseFuncionario)
+                .then(response => {
+                    console.log(this.funcionarios = response.data)
+                })
+                .catch(errors => {
+                    console.log(errors)
+                })
+        },
+// fim função listar funcionario ---------------------------------------------------------------------------------------
+// carregar imagem *****************************************************************************************************
+        carregarImagem(e) {
+            this.arquivoImagem = e.target.files
+        },
+// fim carregar imagens ------------------------------------------------------------------------------------------------
 
-                let config = {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': this.token
-                    }
+
+// Salvar **************************************************************************************************************
+        salvar() {
+            console.log(this.nomeFuncionario, this.data_nascimento, this.arquivoImagem, this.equipe_id)
+            let formData = new FormData();
+            formData.append('equipe_id', this.equipe_id)
+            formData.append('nome', this.nomeFuncionario)
+            formData.append('imagem', this.arquivoImagem[0])
+            formData.append('data_nascimento', this.data_nascimento)
+            let config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Accept': 'application/json',
+                    'Authorization': this.token
                 }
-
-                console.log(this.urlBaseEquipe)
-                axios.get(this.urlBaseEquipe, config)
-                    .then(response => {
-                        this.equipes = response.data
-                        this.teste = this.equipes.data
-                    })
-                    .catch(errors => {
-                        console.log(errors)
-                    })
-            },
-        //--------------------------------------------------------------------------------------------------------------
-
-            carregarImagem(e) {
-                this.arquivoImagem = e.target.files
-            },
-            setStore(obj) {
-              console.log(obj)
-            },
-            salvar() {
-                console.log(this.teste.setStore(obj))
-                //console.log(this.nomeFuncionario, this.arquivoImagem, this.dtNasdcimento, this.teste)
             }
+
+            axios.post(this.urlBaseFuncionario, formData, config)
+                .then(response => {
+                    this.transacaoStatus = 'adicionado'
+                    this.transacaoDetalhes = {
+                        mensagem: 'ID do registro: ' + response.data.id
+                    }
+                })
+                .catch(errors => {
+                    this.transacaoStatus = 'erro'
+                    this.transacaoDetalhes = {
+                        mensagem: errors.response.data.message,
+                        dados: errors.response.data.errors
+                    }
+                })
+
         },
+
+// fim Salvar ----------------------------------------------------------------------------------------------------------
+    },
+//Fim Metodos-----------------------------------------------------------------------------------------------------------
     mounted() {
-        this.carregarListaEquipe()
+        this.carregarLista();
+        this.carregarListaFuncionario()
     }
-    }
+}
 </script>
