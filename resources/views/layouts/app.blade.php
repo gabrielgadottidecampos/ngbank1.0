@@ -42,7 +42,7 @@
                             <a class="nav-link" href="{{route('funcionarios')}}">Funcionarios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Vendas</a>
+                            <a class="nav-link" href="{{route('vendas')}}">Vendas</a>
                         </li>
                     @endauth
                 </ul>

@@ -39,4 +39,9 @@ class Funcionario extends Model
         // um funcionario pertence a uma equipe *********
         return $this->belongsTo('App\Models\Equipe'); // pentence a
     }
+    public function vendas()
+    {
+        //uma equipe possui muitos funcionarios ******************
+        return $this->hasMany('App\Models\Venda'); // um para muitos
+    }
 }

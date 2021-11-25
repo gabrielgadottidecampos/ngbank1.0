@@ -105,34 +105,28 @@ class FuncionarioController extends Controller
         // validação do metodo da requisição para impor as regras e feedback *********
         if($request->method() === 'PATCH'){
             $regrasDinamicas = array();
+
             foreach ($funcionario->rules() as $input => $regra){
                 if (array_key_exists($input,$request->all())){
                     $regrasDinamicas[$input] = $regra;
                 }
             }
-            $request->validate($regrasDinamicas, $this->funcionario->feedback());
+            $request->validate($regrasDinamicas, $funcionario->feedback());
         }else{
-            $request->validate($this->funcionario->rules(), $this->funcionario->feedback());
+            $request->validate($this->funcionario->rules(), $funcionario->feedback());
         }
+        $funcionario->fill($request->all());
         // remove o arquivo antigo caso o novo arquivo tenha sido enviado ***********
         if($request->file('imagem')){
             Storage::disk('public')->delete($funcionario->imagem);
+            // salvando imagem ******************************************
+            $imagem = $request->file('imagem');
+            $imagem_urn = $imagem->store('imagens/funcionarios', 'public');
+
+            $funcionario->fill($request->all());
+            $funcionario->imagem = $imagem_urn;
         }
-
-        // salvando imagem ******************************************
-        $imagem = $request->file('imagem');
-        $imagem_urn = $imagem->store('imagens/funcionarios', 'public');
-
-        $funcionario->fill($request->all());
-        $funcionario->imagem = $imagem_urn;
         $funcionario->save();
-
-        // $funcionario->update([
-        //     'equipe_id' => $request ->equipe_id,
-        //     'nome' => $request->nome,
-        //     'imagem' => $imagem_urn,
-        //     'data_nascimento' => $request->data_nascimento
-        // ]);
         return response()->json($funcionario, 200);
     }
 

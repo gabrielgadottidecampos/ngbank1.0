@@ -29,3 +29,9 @@ Route::get('/funcionarios', function (){
     return view('app.funcionarios');
 })->name('funcionarios')->middleware('auth');
 // fim rotas para funcionarios -----------------------------------------------------------------------------------------
+
+// rota para Vendas **********************************************************************************************
+Route::get('/vendas', function (){
+    return view('app.vendas');
+})->name('vendas')->middleware('auth');
+// fim rotas para Vendas -----------------------------------------------------------------------------------------

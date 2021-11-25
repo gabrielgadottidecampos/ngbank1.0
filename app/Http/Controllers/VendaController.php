@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class VendaController extends Controller
 {
+    // contrutor para setar o classe funcionario
+    public function __construct(Venda $venda){
+        $this->venda = $venda;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +29,18 @@ class VendaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // regras e feedbak de validações *************************
+
+        $request->validate($this->venda->rules(), $this->venda->feedback());
+
+
+        $venda = $this->venda->create([
+            'equipe_id' => $request ->equipe_id,
+            'funcionario_id' => $request ->funcionario_id,
+            'valor_venda' => $request->valor_venda,
+
+        ]);
+        return response()->json($venda,201);
     }
 
     /**

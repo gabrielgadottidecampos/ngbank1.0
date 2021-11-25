@@ -42,6 +42,7 @@ Vue.component('paginate-component', require('./components/Paginate').default);
 Vue.component('inputContainer-component', require('./components/InputContainer.vue').default);
 Vue.component('funcionarios-component', require('./components/Funcionarios.vue').default);
 Vue.component('botoes-component', require('./components/Botaos.vue').default);
+Vue.component('vendas-component', require('./components/Vendas.vue').default);
 
 
 /**

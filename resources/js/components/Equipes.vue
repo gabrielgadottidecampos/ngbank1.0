@@ -318,6 +318,7 @@ export default {
                     this.transacaoDetalhes = {
                         mensagem: 'ID do registro: ' + response.data.id
                     }
+                    this.carregarLista()
                 })
                 .catch(errors => {
                     this.transacaoStatus = 'erro'
