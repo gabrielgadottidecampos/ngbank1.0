@@ -44,6 +44,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('vendas')}}">Vendas</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('principal')}}">Tela</a>
+                        </li>
                     @endauth
                 </ul>
 

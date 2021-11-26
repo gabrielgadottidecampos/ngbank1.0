@@ -43,6 +43,7 @@ Vue.component('inputContainer-component', require('./components/InputContainer.v
 Vue.component('funcionarios-component', require('./components/Funcionarios.vue').default);
 Vue.component('botoes-component', require('./components/Botaos.vue').default);
 Vue.component('vendas-component', require('./components/Vendas.vue').default);
+Vue.component('inicio-component', require('./components/Principal.vue').default);
 
 
 /**

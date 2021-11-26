@@ -35,3 +35,8 @@ Route::get('/vendas', function (){
     return view('app.vendas');
 })->name('vendas')->middleware('auth');
 // fim rotas para Vendas -----------------------------------------------------------------------------------------
+
+Route::get('/principal', function (){
+    return view('app.principal');
+})->name('principal')->middleware('auth');
+// fim rotas para Vendas -----------------------------------------------------------------------------------------
