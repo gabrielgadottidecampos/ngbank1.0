@@ -11,7 +11,9 @@
             <tr v-for="obj, chave in dadosFiltrados" :key="chave">
                 <td v-for="valor, chaveValor in obj" :key="chaveValor">
                     <span v-if="titulos[chaveValor].tipo == 'texto'">{{ valor }}</span>
-                    <span v-if="titulos[chaveValor].tipo == 'nomeEquipe'">{{ valor.nome }} </span>
+                    <span v-if="titulos[chaveValor].tipo == 'nomeFuncionario'">{{ valor.nome }}</span>
+                    <span v-if="titulos[chaveValor].tipo == 'nomeEquipe'">{{ valor.nome }}</span>
+
                     <span v-if="titulos[chaveValor].tipo == 'data'">
                             {{ valor | formataDataTempoGlobal }}
                         </span>

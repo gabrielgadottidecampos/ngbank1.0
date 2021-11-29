@@ -51,18 +51,17 @@
 
                 <div class="form-group">
                     <!-- input nome da equipe -->
-                    <input type="text" class="form-control" id="novoNome" placeholder="Nome da Equipe"
+                    <label>Nome</label>
+                    <input type="text" class="form-control" id="novoNome"
                            v-model="nomeEquipe">
-                    {{ nomeEquipe }}
                     <!-- fim input nome da equipe -->
-                    <!-- input imagem -->
-                    <div class="custom-file mt-3">
-                        <input type="file" class="custom-file-input" id="novaImagem" lang="pt"
-                               @change="carregarImagem($event)">
-                        <label class="custom-file-label" for="novaImagem">Selecione uma Imagem</label>
-                        {{ arquivoImagem }}
-                    </div>
-                    <!-- fim input imagem -->
+                    <form>
+                        <label>Imagem</label>
+                        <div class="input-group">
+                            <label class="input-group-text" for="novaImagem">Upload</label>
+                            <input type="file" class="form-control"id="novaImagem" lang="pt" @change="carregarImagem($event)">
+                        </div>
+                    </form>
                 </div>
             </template>
             <template v-slot:rodape>
@@ -89,12 +88,12 @@
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label for="id">ID</label>
+                                <label for="id">Id</label>
                                 <input type="text" class="form-control " id="id" :value="$store.state.item.id" disabled>
                                 <label for="id">Nome da Equipe</label>
                                 <input type="text" class="form-control" :value="$store.state.item.nome" disabled>
                                 <label for="id">Data de Criação</label>
-                                <input type="text" class="form-control" :value="$store.state.item.created_at" disabled>
+                                <input type="text" class="form-control" :value="$store.state.item.created_at | formataDataTempoGlobal" disabled>
                             </div>
                         </div>
                     </div>
@@ -161,16 +160,19 @@
             <template v-slot:conteudo>
                 <div class="form-group">
                     <!-- input nome da equipe -->
+                    <label  class="form-label">Nome Da Equipe</label>
                     <input type="text" class="form-control" id="atualizarNome" placeholder="Nome da Equipe" v-model="$store.state.item.nome">
                     <!-- fim input nome da equipe -->
 
                     <!-- input imagem -->
-                    <div class="custom-file mt-3">
+                    <label  class="form-label">Imagem</label>
+                    <div class="custom-file">
                         <input type="file" class="custom-file-input" id="atualizarImagem" lang="pt"
                                @change="carregarImagem($event)">
                         <label class="custom-file-label" for="atualizarImagem">Selecione uma Imagem</label>
                     </div>
                     <!-- fim input imagem -->
+
                 </div>
             </template>
             <template v-slot:rodape>

@@ -70,9 +70,14 @@ class VendaController extends Controller
      * @param  \App\Models\Venda  $venda
      * @return \Illuminate\Http\Response
      */
-    public function show(Venda $venda)
+    public function show($id)
     {
-        //
+        $venda = $this->venda->with('venda')->find($id);
+        // validação da pesquisa ************************
+        if($venda === null){
+            return response()->json(['erro' => 'O Funcionario pesquisado não existe'],404);
+        }
+        return response()->json($venda, 200);
     }
 
     /**

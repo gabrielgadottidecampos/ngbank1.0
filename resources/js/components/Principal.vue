@@ -57,14 +57,7 @@ export default {
 
         },
         teste(){
-            this.mes = 0
-            //this.arra = Math.max.apply(null,this.funcionarios.valor_venda)
-            this.funcionarios.forEach((valor)=>{
-                    this.arra[this.mes] = valor.valor_venda
-                    this.mes += 1
-            })
-            this.arra = Math.max.apply(null,this.arra)
-            console.log(this.arra)
+            
         }
 
     },

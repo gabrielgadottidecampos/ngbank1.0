@@ -2,7 +2,8 @@
     <div class="container">
         <!-- Botão Adicionar ------------------------------------------------------------------------------- -->
         <div class="d-md-flex justify-content-md-end mb-2">
-            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalVenda">
+            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalVenda"
+                    @click="carregarFuncionarioLista()">
                 <i class="fas fa-cart-arrow-down"></i>
             </button>
         </div>
@@ -16,16 +17,17 @@
                                  :remover="{visivel: true, dataToggle: 'modal',dataTarget: '#modalVendaExcluir'}"
                                  :titulos="{
                                      id: {titulo: 'ID', tipo: 'texto'},
-                                     funcionario:{titulo: 'Funcionario', tipo: 'nomeEquipe'},
+                                     funcionario:{titulo: 'Funcionario', tipo: 'nomeFuncionario'},
                                      valor_venda: {titulo: 'Valor da Venda', tipo: 'texto'},
                                      created_at: {titulo: 'Data da Venda', tipo: 'data'},
                             }">
-
                 </table-component>
 
             </template>
             <template v-slot:rodape>
+
             </template>
+
         </card-component>
 
         <!-- modal Vendas adicionar ------------------------------------------------------------------------------------>
@@ -44,30 +46,43 @@
             <!-- fim alertas template -->
             <!-- form modal -->
             <template v-slot:conteudo>
-                <div class="mb-3">
-                    <label class="form-label">Funcionario</label>
-                    <input type="text" class="form-control" placeholder="Digite um nome" v-model="nomeFuncionario">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Valor</label>
-                    <input type="text" class="form-control" placeholder="Valor" v-model="valor_venda">
-                </div>
-                <div class="input-group mb-6 mt-3">
-                    <label class="input-group-text">Funcionario</label>
-                    <select class="form-select " @change="onChangeMethod($event)">
-                        <option selected>Selecione um Funcionario</option>
-                        <option v-for="option in teste" v-bind:value=" option.id " :key="option.id"
-                                :ref="option.equipe_id">{{ option.nome }}
-                        </option>
-                    </select>
-                    {{ refsss }}
-                </div>
+
+                <form>
+                    <div class="form-group">
+                        <label>Funcionario</label>
+                        <select class="form-control" @change="onChangeMethod($event)">
+                            <option v-if="a == ''" value="0" selected>Selecione um Funcionario</option>
+                            <option v-for="option in teste" v-bind:value=" option.id " :key="option.id">
+                                {{ option.nome }}
+                            </option>
+                        </select>
+                    </div>
+                </form>
 
 
+                <form>
+                    <div class="form-group">
+                        <label>Equipe</label>
+                        <select class="form-control" @change="onChangeMethod1($event)">
+                            <option>Equipe</option>
+                            <option v-for="option in teste" v-if="option.id == a" v-bind:value="option.equipe_id">
+                                {{ option.equipe.nome }}
+                            </option>
+                        </select>
+                    </div>
+                </form>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">R$</span>
+                    <input type="number" min="0.01" step="0.01" max="9999999" class="form-control" placeholder="Valor"
+                           v-model="valor_venda">
+                </div>
             </template>
             <template v-slot:rodape>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal" @click="limpalista()">
+                        Fechar
+                    </button>
                     <button type="button" class="btn btn-outline-success" @click="salvar()">Salvar</button>
                 </div>
             </template>
@@ -83,7 +98,8 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <img :src="'storage/'+$store.state.item.funcionario.imagem" v-if="$store.state.item.funcionario.imagem"
+                                <img :src="'storage/'+$store.state.item.funcionario.imagem"
+                                     v-if="$store.state.item.funcionario.imagem"
                                      width="200" height="200" class="rounded-circle">
                             </div>
                         </div>
@@ -93,9 +109,9 @@
                                 <input type="text" class="form-control " :value="$store.state.item.funcionario.nome"
                                        disabled>
                                 <label for="id">Valor da Venda</label>
-                                <input type="text" class="form-control" :value="$store.state.item.valor_venda" disabled>
+                                <input type="text" class="form-control" :value="$store.state.item.valor_venda " disabled>
                                 <label for="id">Data da Venda</label>
-                                <input type="text" class="form-control" :value="$store.state.item.created_at" disabled>
+                                <input type="text" class="form-control" :value="$store.state.item.created_at | formataDataTempoGlobal" disabled>
 
                             </div>
                         </div>
@@ -119,7 +135,8 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <img :src="'storage/'+$store.state.item.funcionario.imagem" v-if="$store.state.item.funcionario.imagem"
+                                <img :src="'storage/'+$store.state.item.funcionario.imagem"
+                                     v-if="$store.state.item.funcionario.imagem"
                                      width="200" height="200" class="rounded-circle">
                             </div>
                         </div>
@@ -129,7 +146,8 @@
                                 <input type="text" class="form-control " id="id" :value="$store.state.item.id"
                                        disabled>
                                 <label for="id">Nome</label>
-                                <input type="text" class="form-control " id="id" :value="$store.state.item.funcionario.nome"
+                                <input type="text" class="form-control " id="id"
+                                       :value="$store.state.item.funcionario.nome"
                                        disabled>
                                 <label for="id">Valor da Venda</label>
                                 <input type="text" class="form-control" :value="$store.state.item.valor_venda" disabled>
@@ -175,7 +193,7 @@
                     <label for="id">Valor da Venda</label>
                     <input type="text" class="form-control" v-model="$store.state.item.valor_venda">
                     <label for="id">Data da Venda</label>
-                    <input type="text" class="form-control" v-model="$store.state.item.created_at" >
+                    <input type="date" class="form-control" v-model="$store.state.item.created_at">
                 </div>
             </template>
             <template v-slot:rodape>
@@ -219,7 +237,10 @@ export default {
             nomeFuncionario: '',
             teste: [],
             refsss: [],
-            vendas: []
+            vendas: [],
+            a: '',
+            equipe: '',
+            b: ''
         }
     },
     // fim Data *********************************************************************************************************
@@ -240,9 +261,10 @@ export default {
             axios.post(this.urlBaseVenda, formData, config)
                 .then(response => {
                     this.transacaoStatus = 'adicionado'
+                    this.limpalista()
+                    this.carregarListaVenda()
                     this.transacaoDetalhes = {
-                        mensagem: 'ID do registro: ' + response.data.id
-
+                        mensagem: 'ID do registro: ' + response.data.id,
                     }
                 })
                 .catch(errors => {
@@ -266,11 +288,20 @@ export default {
                 })
         },
         onChangeMethod(event) {
-            this.equipe_id = event.target.value;
-            console.log(this.equipe_id);
-            this.refsss = this.$refs
-
-
+            this.a = event.target.value;
+            this.funcionario_id = this.a
+            console.log(this.funcionario_id)
+        },
+        onChangeMethod1(event) {
+            console.log(event.target.value)
+            this.equipe = event.target.value
+            this.equipe_id = this.equipe
+        },
+        limpalista() {
+            this.a = ''
+            this.funcionario_id = ''
+            this.equipe_id = ''
+            this.valor_venda = ''
         },
         // fim Listar funcionario --------------------------------------------------------------------------------------
         // listar Vendas ***********************************************************************************************
@@ -309,7 +340,7 @@ export default {
                     console.log('Registro removido com sucesso', response)
 
                     this.$store.state.transacao.status = 'sucesso'
-                   // this.$store.state.transacao.mensagem = response.data.msg
+                    // this.$store.state.transacao.mensagem = response.data.msg
                     this.carregarListaVenda()
                 })
                 .catch(errors => {
@@ -351,14 +382,12 @@ export default {
                 .catch(errors => {
                     console.log('Erro de atualização', errors.response)
                 })
-        },
+        }
 // fim função atualizar funcionario ------------------------------------------------------------------------------------
 
 // Fim remover Venda ---------------------------------------------------------------------------------------------
     },
     mounted() {
-
-        //  this.carregarFuncionarioLista()
         this.carregarListaVenda()
     }
 }
