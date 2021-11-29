@@ -80,6 +80,7 @@ class FuncionarioController extends Controller
     public function show($id)
     {
         $funcionario = $this->funcionario->with('equipe')->find($id);
+
         // validação da pesquisa ************************
         if($funcionario === null){
             return response()->json(['erro' => 'O Funcionario pesquisado não existe'],404);
