@@ -49,15 +49,22 @@
 
                 <form>
                     <div class="form-group">
+<<<<<<< HEAD
                         <label>Funcionario</label>
                         <select class="form-control" @change="onChangeMethod($event)">
                             <option v-if="a == ''" value="0" selected>Selecione um Funcionario</option>
+=======
+                        <label>Example select</label>
+                        <select class="form-control" @change="onChangeMethod($event)">
+                            <option v-if="a == ''" value="0" selected>1</option>
+>>>>>>> origin/master
                             <option v-for="option in teste" v-bind:value=" option.id " :key="option.id">
                                 {{ option.nome }}
                             </option>
                         </select>
                     </div>
                 </form>
+<<<<<<< HEAD
 
 
                 <form>
@@ -71,6 +78,25 @@
                         </select>
                     </div>
                 </form>
+=======
+                <div class="form-group">
+                    <label>Example select</label>
+                    <select class="form-select " @change="onChangeMethod1($event)" disabled>
+                        <option v-if="!a || a == null"> Equipe</option>
+                        <option v-for="option in teste" v-if="option.id == a" v-bind:value=" option.equipe_id ">
+                            {{ option.equipe.nome }}
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Equipe</label>
+                    <input type="text" class="form-control" placeholder="equipe" v-model="equipe">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Valor</label>
+                    <input type="text" class="form-control" placeholder="Valor" v-model="valor_venda">
+                </div>
+>>>>>>> origin/master
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">R$</span>
@@ -193,7 +219,11 @@
                     <label for="id">Valor da Venda</label>
                     <input type="text" class="form-control" v-model="$store.state.item.valor_venda">
                     <label for="id">Data da Venda</label>
+<<<<<<< HEAD
                     <input type="date" class="form-control" v-model="$store.state.item.created_at">
+=======
+                    <input type="text" class="form-control" v-model="$store.state.item.created_at">
+>>>>>>> origin/master
                 </div>
             </template>
             <template v-slot:rodape>
@@ -239,8 +269,12 @@ export default {
             refsss: [],
             vendas: [],
             a: '',
+<<<<<<< HEAD
             equipe: '',
             b: ''
+=======
+            equipe: ''
+>>>>>>> origin/master
         }
     },
     // fim Data *********************************************************************************************************
@@ -289,6 +323,7 @@ export default {
         },
         onChangeMethod(event) {
             this.a = event.target.value;
+<<<<<<< HEAD
             this.funcionario_id = this.a
             console.log(this.funcionario_id)
         },
@@ -302,6 +337,14 @@ export default {
             this.funcionario_id = ''
             this.equipe_id = ''
             this.valor_venda = ''
+=======
+        },
+        onChangeMethod1(event) {
+            console.log(event.target.value)
+        },
+        limpalista() {
+            this.a = ''
+>>>>>>> origin/master
         },
         // fim Listar funcionario --------------------------------------------------------------------------------------
         // listar Vendas ***********************************************************************************************
