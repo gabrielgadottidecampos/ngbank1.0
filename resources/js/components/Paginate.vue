@@ -1,6 +1,6 @@
 <template>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination" style="cursor:pointer">
+    <nav aria-label="Page navigation example carDentroTeste" class="carDentroTeste1">
+        <ul class="pagination " style="cursor:pointer">
             <slot></slot>
         </ul>
     </nav>
@@ -9,3 +9,6 @@
 <script>
 export default {}
 </script>
+<style>
+
+</style>

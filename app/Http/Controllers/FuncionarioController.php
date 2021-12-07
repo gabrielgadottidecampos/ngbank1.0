@@ -42,7 +42,7 @@ class FuncionarioController extends Controller
         }
 //------------------------------------------------------------------
 
-        return response()->json($funcionarioRepository->getResultado(),200);
+        return response()->json($funcionarioRepository->getResultadoPaginado(10),200);
     }
 
     /**

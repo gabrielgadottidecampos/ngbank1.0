@@ -13,6 +13,7 @@
                     <span v-if="titulos[chaveValor].tipo == 'texto'">{{ valor }}</span>
                     <span v-if="titulos[chaveValor].tipo == 'nomeFuncionario'">{{ valor.nome }}</span>
                     <span v-if="titulos[chaveValor].tipo == 'nomeEquipe'">{{ valor.nome }}</span>
+                    <span v-if="titulos[chaveValor].tipo == 'valor'"> R$ {{ valor }}</span>
 
                     <span v-if="titulos[chaveValor].tipo == 'data'">
                             {{ valor | formataDataTempoGlobal }}
@@ -38,7 +39,6 @@
         </table>
     </div>
 </template>
-
 <script>
 export default {
     props: ['dados', 'titulos', 'atualizar', 'visualizar', 'remover'],
@@ -70,3 +70,6 @@ export default {
     }
 }
 </script>
+<style>
+
+</style>

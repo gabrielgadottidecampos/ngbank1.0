@@ -1,31 +1,46 @@
 <template>
     <div class="container">
         <!-- Botão Adicionar ------------------------------------------------------------------------------- -->
-        <div class="d-md-flex justify-content-md-end mb-2">
-            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalVenda"
-                    @click="carregarFuncionarioLista()">
-                <i class="fas fa-cart-arrow-down"></i>
-            </button>
+        <div class="row">
+            <div class="col-md-6">
+                <form class=" search" action="">
+                    <input type="search" placeholder="Search here..." required>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <div class="d-md-flex justify-content-md-end mt-2">
+                    <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalVenda"
+                            @click="carregarFuncionarioLista()">
+                        <i class="fas fa-cart-arrow-down"></i>
+                    </button>
+                </div>
+            </div>
         </div>
         <!--fim botão adicionar ---------------------------------------------------------------------------- -->
 
         <card-component titulo="Vendas">
             <template v-slot:conteudo>
-                <table-component :dados="vendas"
+                <table-component :dados="vendas.data"
                                  :visualizar="{visivel: true , dataToggle: 'modal',dataTarget: '#modalVendaVisualizar'}"
                                  :atualizar="{visivel: true, dataToggle: 'modal',dataTarget: '#modalVendaAtualizar'}"
                                  :remover="{visivel: true, dataToggle: 'modal',dataTarget: '#modalVendaExcluir'}"
                                  :titulos="{
                                      id: {titulo: 'ID', tipo: 'texto'},
                                      funcionario:{titulo: 'Funcionario', tipo: 'nomeFuncionario'},
-                                     valor_venda: {titulo: 'Valor da Venda', tipo: 'texto'},
+                                     valor_venda: {titulo: 'Valor da Venda', tipo: 'valor'},
                                      created_at: {titulo: 'Data da Venda', tipo: 'data'},
                             }">
                 </table-component>
 
             </template>
             <template v-slot:rodape>
-
+                <paginate-component>
+                    <li v-for="l, key in vendas.links" :key="key"
+                        :class="l.active ? 'page-item active' : 'page-item'"
+                        @click="paginacao(l)">
+                        <a class="page-link" href="#" v-html="l.label"></a></li>
+                </paginate-component>
             </template>
 
         </card-component>
@@ -46,58 +61,27 @@
             <!-- fim alertas template -->
             <!-- form modal -->
             <template v-slot:conteudo>
-
-                <form>
-                    <div class="form-group">
-<<<<<<< HEAD
-                        <label>Funcionario</label>
-                        <select class="form-control" @change="onChangeMethod($event)">
-                            <option v-if="a == ''" value="0" selected>Selecione um Funcionario</option>
-=======
-                        <label>Example select</label>
-                        <select class="form-control" @change="onChangeMethod($event)">
-                            <option v-if="a == ''" value="0" selected>1</option>
->>>>>>> origin/master
-                            <option v-for="option in teste" v-bind:value=" option.id " :key="option.id">
-                                {{ option.nome }}
-                            </option>
-                        </select>
-                    </div>
-                </form>
-<<<<<<< HEAD
-
-
+                <div class="form-group">
+                    <label>Funcionario</label>
+                    <select class="form-control" @change="onChangeMethod($event)">
+                        <option v-if="a == ''" value="0" selected>Selecione um Funcionario</option>
+                        <option v-for="option in teste.data" v-bind:value=" option.id " :key="option.id">
+                            {{ option.nome }}
+                        </option>
+                    </select>
+                </div>
                 <form>
                     <div class="form-group">
                         <label>Equipe</label>
                         <select class="form-control" @change="onChangeMethod1($event)">
                             <option>Equipe</option>
-                            <option v-for="option in teste" v-if="option.id == a" v-bind:value="option.equipe_id">
+                            <option v-for="option in teste.data" v-if="option.id == a" v-bind:value="option.equipe_id">
                                 {{ option.equipe.nome }}
                             </option>
                         </select>
                     </div>
                 </form>
-=======
-                <div class="form-group">
-                    <label>Example select</label>
-                    <select class="form-select " @change="onChangeMethod1($event)" disabled>
-                        <option v-if="!a || a == null"> Equipe</option>
-                        <option v-for="option in teste" v-if="option.id == a" v-bind:value=" option.equipe_id ">
-                            {{ option.equipe.nome }}
-                        </option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Equipe</label>
-                    <input type="text" class="form-control" placeholder="equipe" v-model="equipe">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Valor</label>
-                    <input type="text" class="form-control" placeholder="Valor" v-model="valor_venda">
-                </div>
->>>>>>> origin/master
-
+                <label class="form-label">Valor</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text">R$</span>
                     <input type="number" min="0.01" step="0.01" max="9999999" class="form-control" placeholder="Valor"
@@ -135,9 +119,11 @@
                                 <input type="text" class="form-control " :value="$store.state.item.funcionario.nome"
                                        disabled>
                                 <label for="id">Valor da Venda</label>
-                                <input type="text" class="form-control" :value="$store.state.item.valor_venda " disabled>
+                                <input type="text" class="form-control" :value="$store.state.item.valor_venda "
+                                       disabled>
                                 <label for="id">Data da Venda</label>
-                                <input type="text" class="form-control" :value="$store.state.item.created_at | formataDataTempoGlobal" disabled>
+                                <input type="text" class="form-control"
+                                       :value="$store.state.item.created_at | formataDataTempoGlobal" disabled>
 
                             </div>
                         </div>
@@ -148,7 +134,7 @@
         <!-- fim modal visualizar vendas ------------------------------------------------------------------------------>
 
         <!-- inicio modal Exclusão-->
-        <modal-component id="modalVendaExcluir" titulo="Visualizar Funcionario">
+        <modal-component id="modalVendaExcluir" titulo="Excluir Venda">
             <template v-slot:alertas>
                 <alert-component tipo="success" titulo="Transação realizada com sucesso"
                                  :detalhes="$store.state.transacao" v-if="$store.state == 'sucesso'"></alert-component>
@@ -217,14 +203,17 @@
                     <label for="id">Nome</label>
                     <input type="text" class="form-control " :value="$store.state.item.funcionario.nome" disabled>
                     <label for="id">Valor da Venda</label>
-                    <input type="text" class="form-control" v-model="$store.state.item.valor_venda">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" min="0.01" step="0.01" max="9999999" class="form-control"
+                               placeholder="Valor"
+                               v-model="$store.state.item.valor_venda">
+                    </div>
                     <label for="id">Data da Venda</label>
-<<<<<<< HEAD
                     <input type="date" class="form-control" v-model="$store.state.item.created_at">
-=======
-                    <input type="text" class="form-control" v-model="$store.state.item.created_at">
->>>>>>> origin/master
+
                 </div>
+                {{ formatandoData() }} -- aqui
             </template>
             <template v-slot:rodape>
                 <div class="modal-footer">
@@ -269,12 +258,9 @@ export default {
             refsss: [],
             vendas: [],
             a: '',
-<<<<<<< HEAD
             equipe: '',
-            b: ''
-=======
-            equipe: ''
->>>>>>> origin/master
+            b: '',
+
         }
     },
     // fim Data *********************************************************************************************************
@@ -323,7 +309,6 @@ export default {
         },
         onChangeMethod(event) {
             this.a = event.target.value;
-<<<<<<< HEAD
             this.funcionario_id = this.a
             console.log(this.funcionario_id)
         },
@@ -337,15 +322,8 @@ export default {
             this.funcionario_id = ''
             this.equipe_id = ''
             this.valor_venda = ''
-=======
         },
-        onChangeMethod1(event) {
-            console.log(event.target.value)
-        },
-        limpalista() {
-            this.a = ''
->>>>>>> origin/master
-        },
+
         // fim Listar funcionario --------------------------------------------------------------------------------------
         // listar Vendas ***********************************************************************************************
         carregarListaVenda() {
@@ -425,13 +403,70 @@ export default {
                 .catch(errors => {
                     console.log('Erro de atualização', errors.response)
                 })
-        }
+        },
 // fim função atualizar funcionario ------------------------------------------------------------------------------------
-
+        formatandoData() {
+            return Date.parse(this.$store.state.item.created_at);
+        }
 // Fim remover Venda ---------------------------------------------------------------------------------------------
     },
     mounted() {
-        this.carregarListaVenda()
+        this.carregarListaVenda();
+        this.carregarFuncionarioLista()
     }
 }
 </script>
+<style>
+
+.search {
+    width: 500px;
+    height: 40px;
+    margin: 10px 1px;
+    background: #444;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    border: 1px solid #fff;
+}
+
+.search input {
+    width: 370px;
+    padding: 10px 5px;
+    float: left;
+    color: #ccc;
+    border: 0;
+    background: transparent;
+    border-radius: 3px 0 0 3px;
+}
+
+.search input:focus {
+    outline: 0;
+    background: transparent;
+}
+
+.search button {
+    position: relative;
+    float: right;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    height: 40px;
+    width: 120px;
+    color: #fff;
+    background: transparent;
+    border-left: 1px solid #fff;
+    border-radius: 0 3px 3px 0;
+}
+
+.search button:hover {
+    background: #fff;
+    color: #444;
+}
+
+.search button:active {
+    box-shadow: 0px 0px 12px 0px #e1e1e1;
+}
+
+.search button:focus {
+    outline: 0;
+}
+</style>

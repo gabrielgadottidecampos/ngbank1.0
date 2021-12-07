@@ -4,10 +4,21 @@
             <div class="col-md-12">
                 <!-- -->
                 <!-- Botão Adicionar ------------------------------------------------------------------------------- -->
-                <div class="d-md-flex justify-content-md-end mb-2">
-                    <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalEquipe">
-                        <i class="fas fa-user-plus"></i>
-                    </button>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <form class=" search" action="">
+                            <input type="search" placeholder="Search here..." required>
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-md-flex justify-content-md-end mb-2">
+                            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalEquipe">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <!--fim botão adicionar ---------------------------------------------------------------------------- -->
                 <card-component titulo="Equipes">
@@ -62,6 +73,8 @@
                             <input type="file" class="form-control"id="novaImagem" lang="pt" @change="carregarImagem($event)">
                         </div>
                     </form>
+
+
                 </div>
             </template>
             <template v-slot:rodape>
@@ -317,6 +330,7 @@ export default {
             axios.post(this.urlBase, formData, config)
                 .then(response => {
                     this.transacaoStatus = 'adicionado'
+                    this.limpar()
                     this.transacaoDetalhes = {
                         mensagem: 'ID do registro: ' + response.data.id
                     }
@@ -329,6 +343,10 @@ export default {
                         dados: errors.response.data.errors
                     }
                 })
+        },
+        limpar(){
+            this.nomeEquipe = '',
+            this.arquivoImagem = []
         }
     },
     mounted() {

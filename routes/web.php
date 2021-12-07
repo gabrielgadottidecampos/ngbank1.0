@@ -40,3 +40,12 @@ Route::get('/principal', function (){
     return view('app.principal');
 })->name('principal')->middleware('auth');
 // fim rotas para Vendas -----------------------------------------------------------------------------------------
+Route::get('/equipecamarote', function (){
+    return view('app.equipeCamarote');
+})->name('equipeCamarote')->middleware('auth');
+// fim rotas para Vendas -----------------------------------------------------------------------------------------
+// fim rotas para Vendas -----------------------------------------------------------------------------------------
+Route::get('/melhoresdodia', function (){
+    return view('app.melhorDia');
+})->name('melhoresdodia')->middleware('auth');
+// fim rotas para Vendas -----------------------------------------------------------------------------------------

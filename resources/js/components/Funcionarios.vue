@@ -1,10 +1,22 @@
 <template>
     <div class="container">
         <!-- Botão Adicionar ------------------------------------------------------------------------------- -->
-        <div class="d-md-flex justify-content-md-end mb-2">
-            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalEquipe">
-                <i class="fas fa-user-plus"></i>
-            </button>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <form class=" search" action="">
+                    <input type="search" placeholder="Search here..." required>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <div class="d-md-flex justify-content-md-end mb-2">
+                    <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalEquipe">
+                        <i class="fas fa-user-plus"></i>
+                    </button>
+                </div>
+            </div>
         </div>
         <!--fim botão adicionar ---------------------------------------------------------------------------- -->
         <!-- inicio card componente *********************************************************************************-->
@@ -12,7 +24,7 @@
             <!-- inicio do conteudo do card *************************************************************************-->
             <template v-slot:conteudo>
                 <table-component
-                    :dados="funcionarios"
+                    :dados="funcionarios.data"
                     :visualizar="{visivel: true, dataToggle: 'modal',dataTarget: '#modalFuncionarioVisualizar'}"
                     :atualizar="{visivel: true, dataToggle: 'modal',dataTarget: '#modalFuncionarioAtualizar'}"
                     :remover="{visivel: true, dataToggle: 'modal',dataTarget: '#modalFuncionarioExcluir'}"
@@ -31,6 +43,12 @@
             <!-- fim do conteudo do card ------------------------------------------------------------------------------>
             <!-- inicio do conteudo do rodape ***********************************************************************-->
             <template v-slot:rodape>
+                <paginate-component>
+                    <li v-for="l, key in funcionarios.links" :key="key"
+                        :class="l.active ? 'page-item active' : 'page-item'"
+                        @click="paginacao(l)">
+                        <a class="page-link" href="#" v-html="l.label"></a></li>
+                </paginate-component>
             </template>
             <!-- fim do card do rodape -------------------------------------------------------------------------------->
         </card-component>
@@ -51,13 +69,12 @@
             <!-- fim alertas template -->
             <!-- form modal -->
             <template v-slot:conteudo>
-
                 <div class="mb-3">
                     <label class="form-label">Nome</label>
                     <input type="text" class="form-control" placeholder="Digite um nome" v-model="nomeFuncionario">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Data de Naascimento</label>
+                    <label class="form-label">Data de Nascimento</label>
                     <input type="date" class="form-control" placeholder="Digite a data de nascimento"
                            v-model="data_nascimento">
                 </div>
@@ -109,6 +126,13 @@
                     <label>Nome Da Equipe</label>
                     <input type="text" class="form-control" id="atualizarEquipe" placeholder="Nascimento Funcionario"
                            v-model="$store.state.item.equipe.nome">
+
+                    <select class="form-control" @change="onChangeMethod($event)" v-bind:value="$store.state.item.data_nascimento">
+                        <option ></option>
+                        <option >
+                            oi
+                        </option>
+                    </select>
 
                     <!-- input imagem -->
                     <label>Imagem</label>
@@ -216,7 +240,9 @@
 </template>
 <!-- inicio dos scripts *********************************************************************************************-->
 <script>
+import Paginate from "./Paginate";
 export default {
+    components: {Paginate},
     computed: {
 // evitando erro de token no navegador *********************************************************************************
         token() {
@@ -321,6 +347,42 @@ export default {
         },
 
 // fim Salvar ----------------------------------------------------------------------------------------------------------
+
+        // Remover Vebda *************************************************************************************************
+        remover() {
+            let confirmacao = confirm('Tem certeza que deseja remover esse registro?')
+
+            if (!confirmacao) {
+                return false;
+            }
+
+            let formData = new FormData();
+            formData.append('_method', 'delete')
+
+            let config = {
+                headers: {
+                    'Accept': 'application/json',
+                    'Autorization': this.token
+                }
+            }
+
+            let url = this.urlBaseFuncionario + '/' + this.$store.state.item.id
+
+            axios.post(url, formData, config)
+                .then(response => {
+                    console.log('Registro removido com sucesso', response)
+
+                    this.$store.state.transacao.status = 'sucesso'
+                    // this.$store.state.transacao.mensagem = response.data.msg
+                    this.carregarListaVenda()
+                })
+                .catch(errors => {
+                    console.log('Houve um erro na tentiva de remoção do registro', errors.response)
+                    this.$store.state.transacao.status = 'erro'
+                    //this.$store.state.transacao.mensagem = errors.response.data.erro
+                })
+
+        },
     },
 //Fim Metodos-----------------------------------------------------------------------------------------------------------
     mounted() {

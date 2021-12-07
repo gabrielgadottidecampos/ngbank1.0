@@ -39,7 +39,7 @@ class VendaController extends Controller
         }
 //------------------------------------------------------------------
 
-        return response()->json($vendaRepository->getResultado(),200);
+        return response()->json($vendaRepository->getResultadoPaginado(10),200);
     }
 
      /**
