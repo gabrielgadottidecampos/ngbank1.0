@@ -89,9 +89,12 @@
         </div>
     </nav>
 
-    <main class="py-4">
+    <main class="py-4 w-auto">
         @yield('content')
     </main>
 </div>
 </body>
 </html>
+<script>
+
+</script>

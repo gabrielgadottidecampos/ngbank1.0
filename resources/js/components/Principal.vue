@@ -11,9 +11,25 @@
                         <div class="xp-social-profile">
                             <div class="xp-social-profile-img" >
                                 <div class="row" >
-                                    <div class="col-2 px-1 mt-2" v-for="t in VendasFiltro(0, vendas, 6, 1)">
-                                        <img v-bind:src="/storage/+t.imagem" class="rounded img-fluid border" alt="img" width="200" height="200">
+                                    <div class="col-2 px-1 mt-2">
+                                        <img src="/storage/imagens/funcionarios/hM5CRR0e9jnHORjipo4gp7hxaX6Ol2tJUZTsqHFc.png" alt="user-profile" class="img-fluid" width="300" height="31">
                                     </div>
+                                    <div class="col-2 px-1 mt-2">
+                                        <img src="/storage/imagens/funcionarios/wGwd59N0jvxyxi3fDE2CHAON8y0xMrU34erNzDVW.png" alt="user-profile" class="img-fluid" width="315" height="315">
+                                    </div>
+                                    <div class="col-2 px-1 mt-2">
+                                        <img src="/storage/imagens/funcionarios/b2bj3Q2K6rDkyo2y8006TgFvoYcmri4YxMsoRvaZ.png" alt="user-profile" class="img-fluid" width="315" height="315">
+                                    </div>
+                                    <div class="col-2 px-1 mt-2">
+                                        <img src="/storage/imagens/funcionarios/hM5CRR0e9jnHORjipo4gp7hxaX6Ol2tJUZTsqHFc.png" alt="user-profile" class="img-fluid" width="300" height="31">
+                                    </div>
+                                    <div class="col-2 px-1 mt-2">
+                                        <img src="/storage/imagens/funcionarios/wGwd59N0jvxyxi3fDE2CHAON8y0xMrU34erNzDVW.png" alt="user-profile" class="img-fluid" width="315" height="315">
+                                    </div>
+                                    <div class="col-2 px-1 mt-2">
+                                        <img src="/storage/imagens/funcionarios/b2bj3Q2K6rDkyo2y8006TgFvoYcmri4YxMsoRvaZ.png" alt="user-profile" class="img-fluid" width="315" height="315">
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="xp-social-profile-top">
@@ -25,7 +41,7 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="xp-social-profile-avatar text-center">
-                                            <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="user-profile" class="rounded-circle img-fluid">
+                                            <img src="/storage/imagens/funcionarios/wGwd59N0jvxyxi3fDE2CHAON8y0xMrU34erNzDVW.png" alt="user-profile" class="rounded-circle">
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -58,7 +74,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
 </template>
 
@@ -92,7 +107,7 @@ export default {
         CarregarApiVendas() {
             axios.get(this.urlBaseVenda)
                 .then(response => {
-                    console.log(this.vendas = response.data)
+                    console.log(this.vendas = response.data.data)
                 })
                 .catch(errors => {
                     console.log(errors)
@@ -102,7 +117,7 @@ export default {
         CarregarApiFuncionarios() {
             axios.get(this.urlBaseFuncionario)
                 .then(response => {
-                    console.log(this.funcionarios = response.data)
+                    console.log(this.funcionarios = response.data.data)
                 })
                 .catch(errors => {
                     console.log(errors)
@@ -124,7 +139,7 @@ export default {
             }
 
             var resultado = arrayRecebido.sort(compare);
-            return resultado.slice(0, quantidade)
+           return resultado.slice(0, quantidade)
         },
 // Fim da Funcção para ordenar e definir quantidade do vetor -----------------------------------------------------------
 
@@ -203,12 +218,12 @@ export default {
                 if (atual == 1) {
                     return resultadoFinal;
                 } else {
-                    return this.SomarVendas(resultadoFinal, quantidade)
+                   return this.SomarVendas(resultadoFinal, quantidade)
                 }
 
             }
 
-            // return this.SomarVendas(resultadoFinal, quantidade)
+            return this.SomarVendas(resultadoFinal, quantidade)
         },
 // Fim filtar venda por dia semana mes ou ano --------------------------------------------------------------------------
 
@@ -266,7 +281,7 @@ export default {
 // Fim da Função equipe camarote ---------------------------------------------------------------------------------------
         ConvertendoNome(array) {
             var arrayFuncionario = this.funcionarios;
-            return arrayFuncionario
+     //       return arrayFuncionario
         }
     },// fim methods
 // fim dos metodos -----------------------------------------------------------------------------------------------------
@@ -305,5 +320,11 @@ export default {
 }
 .corDaImagem{
     background-color: #ffd400;
+}
+.container.body-content{
+    margin-left:0;
+    margin-right:0;
+    padding-left:0;
+    padding-right:0;
 }
 </style>

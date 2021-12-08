@@ -7,16 +7,20 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <form class=" search" action="">
-                            <input type="search" placeholder="Search here..." required>
-                            <button type="submit">Search</button>
-                        </form>
+                        <div class="search">
+                            <input type="text" placeholder="pesquisar ..." v-model="busca.nome">
+                            <button type="submit" @click="pesquisar()">Pesquisar</button>
+                        </div>
+
                     </div>
                     <div class="col-md-6">
-                        <div class="d-md-flex justify-content-md-end mb-2">
-                            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalEquipe">
-                                <i class="fas fa-user-plus"></i>
-                            </button>
+                        <div class="d-md-flex justify-content-md-end">
+                            <div class="wrapper"  data-toggle="modal" data-target="#modalEquipe">
+                                <div class="icon facebook">
+                                    <div class="tooltip" >Adicionar</div>
+                                    <span><i class="fas fa-user-plus"></i></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -219,16 +223,47 @@ export default {
     data() {
         return {
             urlBase: 'http://127.0.0.1:8000/api/v1/equipe',
+            urlPaginacao: '',
+            urlFiltro: '',
             nomeEquipe: '',
             arquivoImagem: [],
             transacaoStatus: '',
             transacaoDetalhes: [],
             equipes: {
                 data: []
+            },
+            busca:{
+                nome: ''
             }
         }
     },
     methods: {
+    // metodo pesquisar ************************************************************************************************
+        pesquisar() {
+
+          let filtro = '';
+          for(let chave in this.busca)
+              if(this.busca[chave]) {
+
+                  filtro += chave + ':like:' + this.busca[chave]
+
+          }
+          if(filtro != '') {
+              this.urlPaginacao = 'page=1'
+              this.urlFiltro = '&filtro='+ filtro +'%'
+          } else {
+              this.urlFiltro = ''
+          }
+            this.carregarLista()
+        },
+    // fim do metodo pesquisar -----------------------------------------------------------------------------------------
+        paginacao(l) {
+            if(l.url) {
+                //this.urlBase = l.url //ajustando a url de consulta com o parâmetro de página
+                this.urlPaginacao = l.url.split('?')[1]
+                this.carregarLista() //requisitando novamente os dados para nossa API
+            }
+        },
         atualizar(){
             let formData = new FormData();
             formData.append('_method', 'patch')
@@ -293,15 +328,11 @@ export default {
                 })
 
         },
-        paginacao(l) {
-            if (l) {
-                this.urlBase = l.url
-                this.carregarLista()
-            }
 
-        },
         carregarLista() {
-            axios.get(this.urlBase)
+            let url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro
+            console.log(url)
+            axios.get(url)
                 .then(response => {
                     this.equipes = response.data
                 })
@@ -354,3 +385,79 @@ export default {
     }
 }
 </script>
+<style>
+/*
+    Auther: Abdelrhman Said
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*:focus,
+*:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+.wrapper {
+    display: inline-flex;
+}
+
+.wrapper .icon {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    padding: 15px;
+    margin: 10px;
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .tooltip {
+    position: absolute;
+    top: 0;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #ffffff;
+    padding: 5px 8px;
+    border-radius: 5px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .icon:hover .tooltip {
+    top: -45px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.wrapper .icon:hover span,
+.wrapper .icon:hover .tooltip {
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wrapper .facebook:hover,
+.wrapper .facebook:hover .tooltip,
+.wrapper .facebook:hover .tooltip::before {
+    background-color: #38c172;
+    color: #ffffff;
+}
+
+</style>

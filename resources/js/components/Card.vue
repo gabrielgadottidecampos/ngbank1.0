@@ -1,7 +1,7 @@
 <template>
 
-    <div class="card mb-3">
-        <h5 class="card-header text-center corTeste text-white"><i class="fas fa-users"><b> {{titulo}}</b></i> </h5>
+    <div class="card mb-3 corTeste">
+        <h5 class="card-header text-center carDentroTeste"><b> {{titulo}}</b></h5>
 
         <div class="card-body text-center ">
             <slot name="conteudo"></slot>
@@ -20,10 +20,11 @@ export default {
 </script>
 <style>
 .corTeste{
-    background: rgb(60,58,58);
-    background: linear-gradient(0deg, rgba(60,58,58,1) 0%, rgba(98,98,98,1) 100%);
+    background: rgba(0, 0, 0, 0.3);
+
 }
 .carDentroTeste{
-    background:  #454d55;
+    background:rgba(0, 0, 0, 0.3);
+    color: #c2a925
 }
 </style>

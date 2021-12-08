@@ -1,5 +1,6 @@
 <template>
     <div class="center">
+        {{vendas}}
         <div class="cardFuncionarioSemana" v-for="(t, key) in  VendasFiltro(vendas, 3)" :key="key">
             <div class="additional" >
                 <div class="user-card " >
@@ -54,13 +55,12 @@ export default {
         CarregarApiVendas() {
             axios.get(this.urlBaseVenda)
                 .then(response => {
-                    this.vendas = response.data
+                    this.vendas = response.data.data
                 })
                 .catch(errors => {
                     console.log(errors)
                 })
         },
-
 
 
         // filtar venda por dia semana mes ou ano ******************************************************************************

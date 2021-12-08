@@ -2,21 +2,27 @@
     <div class="container">
         <!-- Botão Adicionar ------------------------------------------------------------------------------- -->
 
-
         <div class="row">
             <div class="col-md-6">
-                <form class=" search" action="">
-                    <input type="search" placeholder="Search here..." required>
-                    <button type="submit">Search</button>
-                </form>
+                <div class="search">
+                    <input type="text" placeholder="pesquisar ..."v-model="busca.nome">
+                    <button type="submit" @click="pesquisar()">Pesquisar</button>
+                </div>
+
             </div>
             <div class="col-md-6">
-                <div class="d-md-flex justify-content-md-end mb-2">
-                    <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalEquipe">
-                        <i class="fas fa-user-plus"></i>
-                    </button>
+                <div class="d-md-flex justify-content-md-end">
+                    <div class="wrapper"  data-toggle="modal" data-target="#modalEquipe">
+                        <div class="icon facebook">
+                            <div class="tooltip" >Adicionar</div>
+                            <span><i class="fas fa-user-plus"></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
+
         </div>
         <!--fim botão adicionar ---------------------------------------------------------------------------- -->
         <!-- inicio card componente *********************************************************************************-->
@@ -263,6 +269,8 @@ export default {
         return {
             urlBase: 'http://127.0.0.1:8000/api/v1/equipe',
             urlBaseFuncionario: 'http://127.0.0.1:8000/api/v1/funcionario',
+            urlPaginacao: '',
+            urlFiltro: '',
             teste: [],
             arquivoImagem: [],
             equipe_id: [],
@@ -272,13 +280,40 @@ export default {
             transacaoStatus: '',
             funcionarios: [],
             equipe: [],
+            busca:{
+                nome: ''
+            }
 
         }
     },
 // Fim Data ------------------------------------------------------------------------------------------------------------
 // inicio metodos ******************************************************************************************************
     methods: {
+        // metodo pesquisar ************************************************************************************************
+        pesquisar() {
+            let filtro = '';
+            for(let chave in this.busca)
+                if(this.busca[chave]) {
+                    console.log(this.busca[chave], 'aaaaa')
+                    filtro += chave + ':like:' + this.busca[chave]
+
+                }
+            if(filtro != '') {
+                this.urlPaginacao = 'page=1'
+                this.urlFiltro = '&filtro='+ filtro +'%'
+            } else {
+                this.urlFiltro = ''
+            }
+            this.carregarListaFuncionario()
+        },
 // função carregar lista ***********************************************************************************************
+        paginacao(l) {
+            if(l.url) {
+                //this.urlBase = l.url //ajustando a url de consulta com o parâmetro de página
+                this.urlPaginacao = l.url.split('?')[1]
+                this.carregarListaFuncionario() //requisitando novamente os dados para nossa API
+            }
+        },
         carregarLista() {
             axios.get(this.urlBase)
                 .then(response => {
@@ -297,7 +332,8 @@ export default {
 // fim função carregar lista -------------------------------------------------------------------------------------------
 // inicio função listar funcionario ************************************************************************************
         carregarListaFuncionario() {
-            axios.get(this.urlBaseFuncionario)
+            let url = this.urlBaseFuncionario + '?' + this.urlPaginacao + this.urlFiltro
+            axios.get(url)
                 .then(response => {
                     console.log(this.funcionarios = response.data)
                 })
