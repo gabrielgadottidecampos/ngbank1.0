@@ -24,7 +24,7 @@ export default {
 
 }
 .carDentroTeste{
-    background:rgba(0, 0, 0, 0.3);
+    background:rgb(169 169 169 / 30%);
     color: #c2a925
 }
 </style>

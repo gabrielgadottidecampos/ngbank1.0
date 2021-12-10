@@ -120,7 +120,7 @@ export default {
 body {
     font-family: 'Poppins', sans-serif;
     font-weight: 300;
-    font-size: 15px;
+    font-size: 20px;
     line-height: 1.7;
     color: #c4c3ca;
     background-color: #1f2029;
