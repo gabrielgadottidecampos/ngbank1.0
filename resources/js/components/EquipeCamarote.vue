@@ -1,11 +1,14 @@
 <template>
     <div class="container">
-       {{VendasFiltro(vendas)}}
-        {{ funcionarioImagems }}
-        {{ carregandoImagemFuncionario() }}
+       <ul v-for="t in filtrar()">
+           <li>{{t.id}}</li>
+           <li>{{t.nome}}</li>
+           <li>{{t.valor_venda}}</li>
+           <li> Dia {{t.Diacreated_at}}</li>
+           <li> Semana {{t.Semanacreated_at}}</li>
+           <li> Mes {{t.Mescreated_at}}</li>
 
-        {{ teste2 }}
-
+       </ul>
 
     </div>
 </template>
@@ -15,151 +18,78 @@ export default {
     computed: {
 // evitando erro de token no navegador *********************************************************************************
         token() {
-
             let token = document.cookie.split(';').find(indice => {
                 return indice.includes('token=')
             })
-
             token = token.split('=')[1]
             token = 'Bearer ' + token
-
             return token
         }
     },
+    // inicio Data *********************************************************************************************************
     data() {
         return {
-            urlBaseVenda: 'http://127.0.0.1:8000/api/v1/venda', // url para chamar a api de vendas
-            urlBaseFuncionario: 'http://127.0.0.1:8000/api/v1/funcionario', // url para chamar a api de funcionario
-            vendas: [],
-            funcionarios: [],
-            funcionarioImagems: [],
-            imagemEquipe: '',
-            teste: '',
-            teste2: ''
+            urlBaseVenda: 'http://127.0.0.1:8000/api/v1/venda',
+            vendas: []
         }
     },
-// inicio dos metodos **************************************************************************************************
+    // fim Data *********************************************************************************************************
+
     methods: {
-// trazer as informações da api de venda *******************************************************************************
-        CarregarApiVendas() {
-            axios.get(this.urlBaseVenda)
+        // metodo listar vendas ****************************************************************************************
+        carregarListaVenda() {
+            let url = this.urlBaseVenda
+            console.log(url)
+            axios.get(url)
                 .then(response => {
-                    this.vendas = response.data
+                    this.vendas = response.data.data;
                 })
                 .catch(errors => {
                     console.log(errors)
                 })
         },
-// fim trazer as informações da api de venda ---------------------------------------------------------------------------
-        CarregarApiFuncionarios() {
-            axios.get(this.urlBaseFuncionario)
-                .then(response => {
-                    this.funcionarios = response.data
-                })
-                .catch(errors => {
-                    console.log(errors)
-                })
-        },
-// carregar informações funcionario ************************************************************************************
-        VendasFiltro(array) {
-            let data = new Date();
-            let dia = data.getDate();
-            var arrayRecebido = array;
-            var resultado = [];
-            var resultadoFinal = [];
-            arrayRecebido.reduce(function (res, value) {
-                if (!res[value.funcionario_id]) {
-                    res[value.funcionario_id] = {
-                        funcionario_id: value.funcionario_id,
-                        equipe_id: value.equipe_id,
-                        valor_venda: value.valor_venda,
-                        imagem: value.funcionario.imagem,
-                        created_at: value.created_at
-                    };
-                    resultado.push(res[value.funcionario_id])
-                }
+        // fim metodo listar vendas ------------------------------------------------------------------------------------
 
-                res[value.funcionario_id].created_at = new Date(value.created_at).getDate();
-
-                if (res[value.funcionario_id].created_at == dia) {
-                    res[value.funcionario_id] = {
-                        funcionario_id: value.funcionario_id,
-                        equipe_id: value.equipe_id,
-                        valor_venda: value.valor_venda,
-                        imagem: value.funcionario.imagem,
-                        created_at: value.created_at
-                    };
-                    resultadoFinal.push(res[value.funcionario_id])
-                }
-                return res;
-            }, {});
-
-            return this.EquipeCamarote(resultadoFinal)
-            // return resultadoFinal
-
-        },
-
-        EquipeCamarote(quantidade) {
-            var ArrayvendasDia = quantidade;
+        // inicio metodo filtrar vendas por data ***********************************************************************
+        filtrar() {
+            var arrayVendas = this.vendas;
+            var data = new Date();
             var result = [];
-            ArrayvendasDia.reduce(function (res, value) {
-                if (!res[value.equipe_id]) {
-                    res[value.equipe_id] = {equipe_id: value.equipe_id, valor_venda: 0, created_at: value.created_at};
-                    result.push(res[value.equipe_id])
-                }
-                res[value.equipe_id].valor_venda += value.valor_venda;
-                return res;
-            }, {});
-            return this.OrdenarVetor(result)
-        },
-        OrdenarVetor(array) { // quantidade: a quantidade que ira retornar, array: array que irá receber
-            var arrayRecebido = array; // salva o array recebido na variavel
-            function compare(a, b) {
-                if (a.valor_venda < b.valor_venda)
-                    return 1;
-                if (a.valor_venda > b.valor_venda)
-                    return -1;
-                return 0;
-            }
+            var diaAtual = 4;
+            arrayVendas.reduce(function (res, value) {
+                if (!res[value.id]) {
+                    res[value.id] = {
+                        id: value.id,
+                        equipe_id: value.equipe_id,
+                        funcionario_id: value.funcionario_id,
+                        valor_venda: value.valor_venda,
+                        nome: value.funcionario.nome,
+                        imagem: value.funcionario.imagem,
+                        Diacreated_at: new Date(value.created_at).getDate(),
+                       // Semanacreated_at: new Date(value.created_at).getDay(),
+                       // Mescreated_at: new Date(value.created_at).getMonth()+1,
+                    };
+                    result.push(res[value.id])
+                       // if(res[value.id].Mescreated_at > 9){
+                       //     if(res[value.id].Diacreated_at >=  diaAtual - res[value.id].Semanacreated_at  && res[value.id].Diacreated_at <= diaAtual){
+                       //         console.log(diaAtual -res[value.id].Semanacreated_at)
+                       //          result.push(res[value.id])
+                       //     }else{
+                       //         console.log(diaAtual -res[value.id].Semanacreated_at)
+                       //     }
 
-            var resultado = arrayRecebido.sort(compare);
-            this.funcionarioImagems = resultado.slice(0, 1);
-            return resultado.slice(0, 1);
-        },
-        carregandoImagemFuncionario() {
-            var result = [];
-            var imga = '';
-            var a = ''
-            this.funcionarioImagems.reduce(function (res, value) {
-                if(value.equipe_id){
-                    a = value.equipe_id
-                    res[value.equipe_id] = {
-                        equipe_id: value.equipe_id}
-                }
-            },{})
-           // this.teste2 = a;
-            this.funcionarios.reduce(function (res, value) {
-                if (value.equipe_id) {
-                    if (value.equipe_id ==  a) {
-                        res[value.equipe_id] = {
-                            equipe_id: value.equipe_id,
-                            imagem: value.imagem,
-                            imagemEquipe: value.equipe.imagem
-                        };
-                        imga = value.equipe.imagem,
-                            result.push(res[value.equipe_id])
-                    }
+                       // }
                 }
                 return res;
             }, {});
-            this.teste = imga
             return result
         },
-    },
+        // fim metodo filtrar vendas por data --------------------------------------------------------------------------
 
+    },
     mounted() {
-        this.CarregarApiVendas(); // irá carregar o método
-        this.CarregarApiFuncionarios();
+        this.carregarListaVenda();
     }
 }
 </script>
+

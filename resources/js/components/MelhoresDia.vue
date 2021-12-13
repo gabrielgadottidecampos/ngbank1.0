@@ -1,22 +1,57 @@
 <template>
-    <div class="center">
-        {{vendas}}
-        <div class="cardFuncionarioSemana" v-for="(t, key) in  VendasFiltro(vendas, 3)" :key="key">
-            <div class="additional" >
-                <div class="user-card " >
-                    <img v-bind:src="/storage/+t.imagem" class="img-fluid d-block mx-auto rounded-circle img-thumbnail mb-4">
-                </div>
-                <div class="more-info">
-                    <h3>{{t.nome}}</h3>
-                    <div class="stats">
-                        <div>
-                            <div class="title">Colocação</div>
-                            <i class="fa fa-trophy"></i>
-                            <div class="value">{{ incrementIndex(key)}}</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title pb-3 mt-0 text-center text-white sombratexto">Melhores Do Dia</h4>
+                        <div v-for="(t, key) in  ordenar()" :key="key">
+                            {{incrementIndex(key)}}
+                        <div class="row well well-purple mini-profile-widget rounded shadow p-3 mb-5" v-bind:style="{ background: activeColor}">
+                            <div class="col-md-6">
+                                <div class="image-container mt-2 mb-2">
+                                    <img v-bind:src="/storage/+t.imagem"
+                                         class="avatar img-responsive" alt="avatar" height="130"
+                                         width="130">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="details mt-2 text-white sombratexto">
+                                    <h4>{{t.nome}}</h4>
+                                    <hr>
+                                    <div class="text-white sombratexto">Total Em Vendas</div>
+                                    <h4>
+                                    <span><img src="https://cdn-icons-png.flaticon.com/512/2916/2916103.png" height="60" width="60"> <strong class="text-white sombratexto"> R$ {{t.valor_venda}}</strong></span>
+                                    </h4>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="title">Valor</div>
-                            <div class="value infinity mt-2">{{t.valor_venda}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title pb-3 mt-0 text-center text-white sombratexto">Ultimas Vendas</h4>
+                        <div class="table" >
+                            <table class="table" v-for="v in  ordenarVendasDia()">
+                                <tbody >
+                                <tr>
+                                    <td class="border-top-1">
+                                        <div class="media"><img v-bind:src="/storage/+v.imagem" alt=""
+                                                                class="thumb-md rounded-circle" height="130"
+                                                                width="130">
+                                            <div class="text-center">
+                                                <h4><span class="text-dark">{{ v.nome }}</span></h4>
+                                                <hr>
+                                               <h4> R$ {{ v.valor_venda }}</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -44,7 +79,7 @@ export default {
     },
     data() {
         return {
-            urlBaseVenda: 'http://127.0.0.1:8000/api/v1/venda', // url para chamar a api de vendas
+            urlBaseVenda: 'http://127.0.0.1:8000/api/v1/venda',
             vendas: [],
             activeColor: 'red',
         }
@@ -61,73 +96,73 @@ export default {
                     console.log(errors)
                 })
         },
-
-
-        // filtar venda por dia semana mes ou ano ******************************************************************************
-        VendasFiltro(array, quantidade) {
-            let data = new Date();
-            let dia = data.getDate();
-
-            var arrayRecebido = array;
-            var resultado = [];
-            var resultadoFinal = [];
-            arrayRecebido.reduce(function (res, value) {
-                if (!res[value.funcionario_id]) {
-                    res[value.funcionario_id] = {
+        AdicionarData() {
+            var ArrayvendasDia = this.vendas;
+            var result = [];
+            ArrayvendasDia.reduce(function (res, value) {
+                if (!res[value.id]) {
+                    res[value.id] = {
+                        id: value.id,
                         funcionario_id: value.funcionario_id,
                         valor_venda: value.valor_venda,
                         nome: value.funcionario.nome,
                         imagem: value.funcionario.imagem,
+                        Mescreated_at: new Date(value.created_at).getMonth() + 1,
+                        Dia: new Date(value.created_at).getUTCDate(),
                         created_at: value.created_at
                     };
-                    resultado.push(res[value.funcionario_id])
-                }
-
-                    res[value.funcionario_id].created_at = new Date(value.created_at).getDate();
-
-                if (res[value.funcionario_id].created_at == dia) {
-                    res[value.funcionario_id] = {
-                        funcionario_id: value.funcionario_id,
-                        valor_venda: value.valor_venda,
-                        nome: value.funcionario.nome,
-                        imagem: value.funcionario.imagem,
-                        created_at: value.created_at
-                    };
-                    resultadoFinal.push(res[value.funcionario_id])
+                    result.push(res[value.id])
                 }
                 return res;
             }, {});
-
-            return this.SomarVendas(resultadoFinal, quantidade)
-           // return resultadoFinal
-
+            return result
         },
+        filtrarMelhoresDoDia() {
+            var data = new Date();
+            var result = [];
+            var arrayMelhoresDoDia = this.AdicionarData();
+            arrayMelhoresDoDia.reduce(function (res, value) {
+                if (value.Mescreated_at == data.getMonth() + 1 && value.Dia == 1) {
+                    if (!res[value.funcionario_id]) {
+                        res[value.funcionario_id] = {
+                            funcionario_id: value.funcionario_id,
+                            valor_venda: 0,
+                            nome: value.nome,
+                            imagem: value.imagem,
+                        };
+                        result.push(res[value.funcionario_id])
+                    }
 
-        SomarVendas(array, quantidade) {
-            var arrayVendas = array;
-            var resultado = [];
-            arrayVendas.reduce(function (res, value) {
-                if (!res[value.funcionario_id]) {
-                    res[value.funcionario_id] = {
+                    res[value.funcionario_id].valor_venda += value.valor_venda;
+                }
+
+                return res;
+            }, {});
+            return result
+        },
+        filtrarVendasDoDia() {
+            var data = new Date();
+            var result = [];
+            var arrayMelhoresDoDia = this.AdicionarData();
+            arrayMelhoresDoDia.reduce(function (res, value) {
+                if (value.Mescreated_at == data.getMonth() + 1 && value.Dia == 1) {
+                    res[value.id] = {
                         funcionario_id: value.funcionario_id,
-                        valor_venda: 0,
+                        valor_venda: value.valor_venda,
                         nome: value.nome,
                         imagem: value.imagem,
                         created_at: value.created_at
-
                     };
-                    resultado.push(res[value.funcionario_id])
+                    result.push(res[value.id])
                 }
-                res[value.funcionario_id].valor_venda += value.valor_venda;
+
                 return res;
             }, {});
-           return this.OrdenarVetor(quantidade, resultado)
-
+            return result
         },
-// fim trazer as informações da api de venda ---------------------------------------------------------------------------
+        ordenar() {
+            var array = this.filtrarMelhoresDoDia();
 
-        OrdenarVetor(quantidade, array) { // quantidade: a quantidade que ira retornar, array: array que irá receber
-            var arrayRecebido = array; // salva o array recebido na variavel
             function compare(a, b) {
                 if (a.valor_venda < b.valor_venda)
                     return 1;
@@ -136,186 +171,177 @@ export default {
                 return 0;
             }
 
-            var resultado = arrayRecebido.sort(compare);
-            return resultado.slice(0, quantidade)
-        },
+            var resultado = array.sort(compare);
+            return resultado.slice(0, 3)
 
+        },
+        ordenarVendasDia() {
+            var array = this.filtrarVendasDoDia();
+
+            function compare(a, b) {
+                if (a.created_at < b.created_at)
+                    return 1;
+                if (a.created_at > b.created_at)
+                    return -1;
+                return 0;
+            }
+
+            var resultado = array.sort(compare);
+            return resultado.slice(0, 5)
+
+        },
         incrementIndex(key) {
             if(key == 0){
                 this.activeColor = '#ffd700';
-                return key + 1;
             }else if(key == 1){
                 this.activeColor = '#c0c0c0';
-                return key + 1;
             }else if(key == 2){
                 this.activeColor = '#9c5221';
-                return key + 1;
             }else{
                 this.activeColor = '#ffffff';
-                return key + 1;
             }
         },
+
     },
     mounted() {
         this.CarregarApiVendas(); // irá carregar o método
-
     }
 
 }
 </script>
 <style>
-
-.center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
+.bordaPretaImagem {
+    border: 1px solid #000000;
+}
+.sombratexto{
+    text-shadow: black 0.1em 0.1em 0.2em
 }
 
-.cardFuncionarioSemana {
-    width: 450px;
-    height: 200px;
-    background-color: #fff;
-    background: linear-gradient(#f8f8f8, #fff);
-    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
-    border-radius: 6px;
+/* Component: Well */
+.well {
     overflow: hidden;
+    border-radius: 0;
+    margin-bottom: 30px;
+}
+
+.well .well-heading .controls {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+}
+
+.well .well-body {
+    margin-top: 20px;
     position: relative;
-    margin: 1.5rem;
+    z-index: 3;
 }
 
-.cardFuncionarioSemana h1 {
-    text-align: center;
-}
-
-.cardFuncionarioSemana .additional {
+.well .well-image {
+    font-size: 90px;
+    line-height: 90px;
     position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(#cb8400, #ffffff);
-    transition: width 0.4s;
-    overflow: hidden;
-    z-index: 2;
+    top: 20px;
+    right: 30px;
+    z-index: 1;
+    color: rgba(0, 0, 0, 0.15);
+    -webkit-transition: all 0.2s ease-in;
+    -moz-transition: all 0.2s ease-in;
+    -ms-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
 }
 
-.cardFuncionarioSemana.green .additional {
-    background: linear-gradient(#92bCa6, #A2CCB6);
-
-}
-.cardFuncionarioSemana .additional .user-card {
-    width: 150px;
-    height: 100%;
-    position: relative;
-    float: left;
+.well:hover .well-image {
+    font-size: 60px;
 }
 
-.cardFuncionarioSemana .additional .user-card::after {
-    content: "";
+
+.well-purple {
+    background-color: #8e44ad;
+    color: white;}
+
+
+.mini-profile-widget .image-container .avatar {
+    width: 180px;
+    height: 180px;
     display: block;
-    position: absolute;
-    top: 10%;
-    right: -2px;
-    height: 80%;
-    border-left: 2px solid rgba(0,0,0,0.025);
+    margin: 0 auto;
+    border-radius: 50%;
+    background: white;
+    padding: 4px;
+    border: 1px solid #dddddd;
 }
 
-.cardFuncionarioSemana .additional .user-card .level,
-.cardFuncionarioSemana .additional .user-card .points {
-    top: 15%;
-    color: #fff;
-    text-transform: uppercase;
-    font-size: 0.75em;
-    font-weight: bold;
-    background: rgba(0,0,0,0.15);
-    padding: 0.125rem 0.75rem;
-    border-radius: 100px;
-    white-space: nowrap;
+.btn-blue {
+    background-color: #3498db;
+    border-color: #3498db;
+    color: white;
 }
 
-.cardFuncionarioSemana .additional .user-card .points {
-    top: 85%;
+.btn-blue:hover,
+.btn-blue:visited {
+    background-color: #2980b9;
+    color: white;
 }
 
-.cardFuncionarioSemana .additional .user-card svg {
-    top: 50%;
+.btn-green {
+    background-color: #2ecc71;
+    border-color: #27ae60;
+    color: white;
 }
 
-.cardFuncionarioSemana .additional .more-info {
-    width: 300px;
-    float: left;
-    position: absolute;
-    left: 150px;
-    height: 100%;
+.btn-green:hover,
+.btn-green:visited {
+    background-color: #27ae60;
+    color: white;
 }
 
-.cardFuncionarioSemana .additional .more-info h3 {
-    color: #fff;
-    margin-bottom: 0;
+.btn-orange {
+    background-color: #ff530d;
+    border-color: #e82c0c;
+    color: white;
 }
 
-.cardFuncionarioSemana.green .additional .more-info h1 {
-    color: #224C36;
+.btn-orange:hover,
+.btn-orange:visited {
+    background-color: #e82c0c;
+    color: white;
 }
 
-.cardFuncionarioSemana .additional .coords {
-    margin: 0 1rem;
-    color: #fff;
-    font-size: 1rem;
+.btn-red {
+    background-color: #ff1d23;
+    border-color: #d40d12;
+    color: white;
 }
 
-.cardFuncionarioSemana.green .additional .coords {
-    color: #325C46;
+.btn-red:hover,
+.btn-red:visited {
+    background-color: #d40d12;
+    color: white;
 }
 
-.cardFuncionarioSemana .additional .coords span + span {
-    float: right;
+.btn-purple {
+    background-color: #9b59b6;
+    border-color: #8e44ad;
+    color: white;
 }
 
-.cardFuncionarioSemana .additional .stats {
-    font-size: 2rem;
-    display: flex;
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    right: 1rem;
-    top: auto;
-    color: #fff;
+.btn-purple:hover,
+.btn-purple:visited {
+    background-color: #8e44ad;
+    color: white;
 }
 
-.cardFuncionarioSemana.green .additional .stats {
-    color: #325C46;
+.btn-pink {
+    background-color: #fd32c0;
+    border-color: #fe31ab;
+    color: white;
 }
 
-.cardFuncionarioSemana .additional .stats > div {
-    flex: 1;
-    text-align: center;
+.btn-pink:hover,
+.btn-pink:visited {
+    background-color: #fe31ab;
+    color: white;
 }
-
-.cardFuncionarioSemana .additional .stats i {
-    display: block;
-}
-
-.cardFuncionarioSemana .additional .stats div.title {
-    font-size: 0.75rem;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.cardFuncionarioSemana .additional .stats div.value {
-    font-size: 1.5rem;
-    font-weight: bold;
-    line-height: 1.5rem;
-}
-
-.cardFuncionarioSemana .additional .stats div.value.infinity {
-    font-size: 2.5rem;
-}
-.img-thumbnail{
-    width:110px;
-    height:110px;
-    margin-top: 50%;
-}
-
-
 </style>
 

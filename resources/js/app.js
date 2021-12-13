@@ -47,6 +47,7 @@ Vue.component('vendas-component', require('./components/Vendas.vue').default);
 Vue.component('inicio-component', require('./components/Principal.vue').default);
 Vue.component('camarote-component', require('./components/EquipeCamarote.vue').default);
 Vue.component('melhoresdodia-component', require('./components/MelhoresDia.vue').default);
+Vue.component('melhoresdomes-component', require('./components/MelhoresDoMes.vue').default);
 
 
 /**

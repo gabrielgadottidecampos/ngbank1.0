@@ -10,9 +10,9 @@
             <tbody>
             <tr v-for="obj, chave in dadosFiltrados" :key="chave">
                 <td v-for="valor, chaveValor in obj" :key="chaveValor">
-                    <span v-if="titulos[chaveValor].tipo == 'texto'">{{ valor }}</span>
-                    <span v-if="titulos[chaveValor].tipo == 'nomeFuncionario'">{{ valor.nome }}</span>
-                    <span v-if="titulos[chaveValor].tipo == 'nomeEquipe'">{{ valor.nome }}</span>
+                    <span v-if="titulos[chaveValor].tipo == 'texto'" class="corFonte">{{ valor }}</span>
+                    <span v-if="titulos[chaveValor].tipo == 'nomeFuncionario'" class="corFonte">{{ valor.nome }}</span>
+                    <span v-if="titulos[chaveValor].tipo == 'nomeEquipe'" class="corFonte">{{ valor.nome }}</span>
                     <span v-if="titulos[chaveValor].tipo == 'valor'"> R$ {{ valor }}</span>
 
                     <span v-if="titulos[chaveValor].tipo == 'data'">
@@ -29,10 +29,10 @@
                     </button>
                     <button v-if="atualizar.visivel" class="btn btn-outline-info btn-sm" :data-toggle="atualizar.dataToggle" :data-target="atualizar.dataTarget" @click="setStore(obj)">
                         <i class="far fa-edit"></i>
-                        </button>
+                    </button>
                     <button v-if="remover.visivel" class="btn btn-outline-danger btn-sm" :data-toggle="remover.dataToggle":data-target="remover.dataTarget" @click="setStore(obj)">
                         <i class="far fa-trash-alt"></i>
-                        </button>
+                    </button>
                 </td>
             </tr>
             </tbody>
@@ -70,4 +70,9 @@ export default {
     }
 }
 </script>
+<style>
+.corFonte{
+    color: #ffffff;
+}
+</style>
 

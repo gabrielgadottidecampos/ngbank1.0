@@ -49,3 +49,6 @@ Route::get('/melhoresdodia', function (){
     return view('app.melhorDia');
 })->name('melhoresdodia')->middleware('auth');
 // fim rotas para Vendas -----------------------------------------------------------------------------------------
+Route::get('/melhoresdomes', function (){
+    return view('app.melhoresDoMes');
+})->name('melhoresdomes')->middleware('auth');
