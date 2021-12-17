@@ -48,6 +48,8 @@ Vue.component('inicio-component', require('./components/Principal.vue').default)
 Vue.component('camarote-component', require('./components/EquipeCamarote.vue').default);
 Vue.component('melhoresdodia-component', require('./components/MelhoresDia.vue').default);
 Vue.component('melhoresdomes-component', require('./components/MelhoresDoMes.vue').default);
+Vue.component('aniversariantes-component', require('./components/Aniversariantes.vue').default);
+Vue.component('melhoresdasemana-component', require('./components/MelhoresDaSemana.vue').default);
 
 
 /**

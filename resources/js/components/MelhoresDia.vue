@@ -1,15 +1,15 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-xl-6">
-                <div class="card">
-                    <div class="card-body">
+            <div class="col-xl-6 ">
+                <div class="card designCardMelhoresDia">
+                    <div class="card-body designCardMelhoresDia">
                         <h4 class="header-title pb-3 mt-0 text-center text-white sombratexto">Melhores Do Dia</h4>
                         <div v-for="(t, key) in  ordenar()" :key="key">
                             {{incrementIndex(key)}}
                         <div class="row well well-purple mini-profile-widget rounded shadow p-3 mb-5" v-bind:style="{ background: activeColor}">
                             <div class="col-md-6">
-                                <div class="image-container mt-2 mb-2">
+                                <div class="image-container mt-3 mb-2">
                                     <img v-bind:src="/storage/+t.imagem"
                                          class="avatar img-responsive" alt="avatar" height="130"
                                          width="130">
@@ -31,10 +31,10 @@
                 </div>
             </div>
             <div class="col-xl-6">
-                <div class="card">
-                    <div class="card-body">
+                <div class="card designCardMelhoresDia">
+                    <div class="card-body designCardMelhoresDia">
                         <h4 class="header-title pb-3 mt-0 text-center text-white sombratexto">Ultimas Vendas</h4>
-                        <div class="table" >
+                        <div class="table ">
                             <table class="table" v-for="v in  ordenarVendasDia()">
                                 <tbody >
                                 <tr>
@@ -42,10 +42,11 @@
                                         <div class="media"><img v-bind:src="/storage/+v.imagem" alt=""
                                                                 class="thumb-md rounded-circle" height="130"
                                                                 width="130">
-                                            <div class="text-center">
-                                                <h4><span class="text-dark">{{ v.nome }}</span></h4>
+                                            <div class="text-center text-white sombratexto">
+                                                <h4><span class="text-darktext-white sombratexto">{{ v.nome }}</span></h4>
                                                 <hr>
-                                               <h4> R$ {{ v.valor_venda }}</h4>
+                                                <h4> <span><img src="https://cdn-icons-png.flaticon.com/512/2916/2916103.png" height="60" width="60"> <strong class="text-white sombratexto"> R$ {{ v.valor_venda }}</strong></span>
+                                                </h4>
                                             </div>
                                         </div>
                                     </td>
@@ -122,7 +123,7 @@ export default {
             var result = [];
             var arrayMelhoresDoDia = this.AdicionarData();
             arrayMelhoresDoDia.reduce(function (res, value) {
-                if (value.Mescreated_at == data.getMonth() + 1 && value.Dia == 1) {
+                if (value.Mescreated_at == data.getMonth() + 1 && value.Dia == data.getDate()) {
                     if (!res[value.funcionario_id]) {
                         res[value.funcionario_id] = {
                             funcionario_id: value.funcionario_id,
@@ -145,7 +146,7 @@ export default {
             var result = [];
             var arrayMelhoresDoDia = this.AdicionarData();
             arrayMelhoresDoDia.reduce(function (res, value) {
-                if (value.Mescreated_at == data.getMonth() + 1 && value.Dia == 1) {
+                if (value.Mescreated_at == data.getMonth() + 1 && value.Dia == data.getDate()) {
                     res[value.id] = {
                         funcionario_id: value.funcionario_id,
                         valor_venda: value.valor_venda,
@@ -342,6 +343,18 @@ export default {
 .btn-pink:visited {
     background-color: #fe31ab;
     color: white;
+}
+.designCardMelhoresDia{
+    padding: 0.25rem;
+    border-radius: 1.25rem;
+    background-color: #ffffff57;
+}
+.tabelaTamanhoMelhoresdoDia{
+    margin-bottom: 0.7rem
+}
+.displayflexMelhoresdodia{
+    display: flex;
+    align-items: center;
 }
 </style>
 

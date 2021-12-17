@@ -52,3 +52,10 @@ Route::get('/melhoresdodia', function (){
 Route::get('/melhoresdomes', function (){
     return view('app.melhoresDoMes');
 })->name('melhoresdomes')->middleware('auth');
+
+Route::get('/aniversariantes', function (){
+    return view('app.aniversariantes');
+})->name('aniversariantes')->middleware('auth');
+Route::get('/melhoresdasemana', function (){
+    return view('app.melhoresDaSemana');
+})->name('melhoresdasemana')->middleware('auth');

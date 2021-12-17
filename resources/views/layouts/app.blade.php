@@ -22,7 +22,7 @@
 <body>
 
 <div id="app">
-    @section('menuprincipal')
+    @section('menu')
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/home') }}">

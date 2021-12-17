@@ -11,7 +11,7 @@
             </div>
             <div class="col-md-6">
                 <div class="d-md-flex justify-content-md-end">
-                    <button class="button1" data-toggle="modal" data-target="#modalVenda" @click="carregarFuncionarioLista()">
+                    <button class="button1" data-toggle="modal" data-target="#modalVenda">
   <span class=" button__text">
                     <span>V</span><span>E</span>N</span><span>D</span><span>A</span>
                         <svg class="button__svg" role="presentational" viewBox="0 0 600 600">
@@ -90,7 +90,7 @@
         </card-component>
 
         <!-- modal Vendas adicionar ------------------------------------------------------------------------------------>
-        <modal-component id="modalVenda " titulo="Adicionar Venda">
+        <modal-component id="modalVenda" titulo="Adicionar Venda">
             <!-- alertas template -->
             <template v-slot:alertas>
                 <alert-component tipo="success" :detalhes="transacaoDetalhes" titulo="Cadastro realizado com sucesso"
@@ -267,7 +267,6 @@
             </template>
         </modal-component>
         <!-- fim form modal Edição de equip -->
-
     </div>
 </template>
 
