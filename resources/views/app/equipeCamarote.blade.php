@@ -1,4 +1,4 @@
-@extends('layouts.app', 'Default content')
+@extends('layouts.app')
 
 @section('content')
     <camarote-component></camarote-component>
