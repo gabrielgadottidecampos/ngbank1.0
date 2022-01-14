@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="containerEquipeCamarote">
         <!-- Botão Adicionar ------------------------------------------------------------------------------- -->
 
         <div class="row">
@@ -367,10 +367,12 @@ export default {
 
             axios.post(this.urlBaseFuncionario, formData, config)
                 .then(response => {
-                    this.transacaoStatus = 'adicionado'
+                    this.transacaoStatus = 'adicionado';
+                    this.carregarListaFuncionario();
                     this.transacaoDetalhes = {
                         mensagem: 'ID do registro: ' + response.data.id
                     }
+
                 })
                 .catch(errors => {
                     this.transacaoStatus = 'erro'
@@ -410,7 +412,7 @@ export default {
 
                     this.$store.state.transacao.status = 'sucesso'
                     // this.$store.state.transacao.mensagem = response.data.msg
-                    this.carregarListaVenda()
+                    this.carregarListaFuncionario()
                 })
                 .catch(errors => {
                     console.log('Houve um erro na tentiva de remoção do registro', errors.response)

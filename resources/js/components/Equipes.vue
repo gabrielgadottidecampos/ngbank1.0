@@ -1,5 +1,5 @@
-<template xmlns="http://www.w3.org/1999/html">
-    <div class="container">
+<template>
+    <div class="containerEquipeCamarote">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <!-- -->

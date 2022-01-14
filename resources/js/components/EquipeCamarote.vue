@@ -1,17 +1,18 @@
 <template>
-    <div class="container">
+    <div class="containerEquipeCamarote">
         <div class="row">
             <div class="col-md-12">
-                <div class="card m-b-30">
-                    <div class="card-header bg-white">
+                <div class="cardEquipeCamarote">
+                    <div class="cardHeaderEquipeCamarote">
                         <h3 class="card-title mb-0 text-center text-white sombratexto">Equipe Camarote</h3>
+                        <hr>
                     </div>
                     <div class="card-body">
                         <div class="xp-social-profile">
                             <div class="xp-social-profile-img">
                                 <div class="row">
                                     <div class="col px-1" v-for="a in listandoGanhadores()">
-                                        <img v-bind:src="/storage/+a.imagem" class="rounded img-fluid" alt="img"
+                                        <img v-bind:src="/storage/+a.imagem" class="imagemFuncionario img-fluid" alt="img"
                                              width="200" height="200">
                                     </div>
                                 </div>
@@ -24,9 +25,9 @@
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <div class="xp-social-profile-avatar text-center">
+                                        <div class="xp-social-profile-avatar text-center ">
                                             <img v-bind:src="/storage/+imagemEquipe" alt="user-profile"
-                                                 class="rounded-circle img-fluid" width="200" height="200">
+                                                 class="rounded-circle img-fluid " width="250" height="250">
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -40,7 +41,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="xp-social-profile-title">
-                                            <h2 class="my-1 text-black">{{ nomeEquipe }}</h2>
+                                            <h2 class="text-white sombratexto">{{ nomeEquipe }}</h2>
                                         </div>
                                         <hr>
                                         <div>
@@ -225,56 +226,33 @@ export default {
 /*  -----  Widget - Social Profile  -----  */
 .xp-social-profile-avatar img {
     margin-top: -20px;
-    border: 5px rgba(0, 0, 0, 0.3);
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 20px
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 20px
 }
-
-.xp-social-profile-avatar .xp-social-profile-live {
-    position: absolute;
-    bottom: 15px;
-    margin: 0px -20px;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    border: 2px solid #ffffff;
-    background-color: #2bcd72;
-}
-
 .text-black {
     color: #555555 !important;
 }
+.containerEquipeCamarote{
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
 
-.mb-1, .my-1 {
-    margin-bottom: .25rem !important;
 }
-
-.mt-1, .my-1 {
-    margin-top: .25rem !important;
+.cardEquipeCamarote{
+    background-color: #ffffff57;
+    border-radius: 1.25rem;
 }
-
-.h5, h5 {
-    font-size: 1.25rem;
+.cardHeaderEquipeCamarote{
+    rounded-top: 1.25rem;
+    background-color: rgba(245, 241, 241, 0.34);
 }
-
-.card-header:first-child {
-    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+.cardHeaderEquipeCamarote h3{
+    padding: 1%;
+    font-size:50px;
+    color: black;
 }
-
-.card-header {
-    border-bottom: 1px solid rgba(85, 85, 85, 0.05);
-}
-
-.bg-white {
-    background-color: #ffffff !important;
-}
-
-.card {
-    border: none;
-    box-shadow: 0 0 30px 0 rgba(200, 200, 200, 0.2);
-}
-
-.m-b-30 {
-    margin-bottom: 30px;
+.imagemFuncionario{
+    border-radius:2.75rem !important
 }
 </style>
 

@@ -1,8 +1,10 @@
 <template>
-    <div class="container">
+    <div class="containerEquipeCamarote">
+{{this.$store.state.atualizaPagina}}
         <!-- Botão Adicionar ------------------------------------------------------------------------------- -->
         <div class="row">
             <div class="col-md-6">
+                <button @click="testes()">teste</button>
                 <div class="search">
                     <input type="text" placeholder="pesquisar ..."v-model="busca.id">
                     <button type="submit" @click="pesquisar()">Pesquisar</button>
@@ -333,6 +335,7 @@ export default {
             }
         },
         salvar() {
+            var a = true;
             let formData = new FormData();
             formData.append('equipe_id', this.equipe_id)
             formData.append('funcionario_id', this.funcionario_id)
@@ -347,11 +350,12 @@ export default {
             axios.post(this.urlBaseVenda, formData, config)
                 .then(response => {
                     this.transacaoStatus = 'adicionado'
-                    this.limpalista()
-                    this.carregarListaVenda()
+                    this.limpalista();
+                    this.carregarListaVenda();
                     this.transacaoDetalhes = {
                         mensagem: 'ID do registro: ' + response.data.id,
                     }
+
                 })
                 .catch(errors => {
                     this.transacaoStatus = 'erro'
@@ -360,6 +364,7 @@ export default {
                         dados: errors.response.data.errors
                     }
                 })
+
         },
         // fim Salvar --------------------------------------------------------------------------------------------------
         // Listar funcionario ******************************************************************************************
@@ -463,8 +468,14 @@ export default {
 // fim função atualizar funcionario ------------------------------------------------------------------------------------
         formatandoData() {
             return Date.parse(this.$store.state.item.created_at);
-        }
+        },
 // Fim remover Venda ---------------------------------------------------------------------------------------------
+        testes(){
+            this.$emit('addVendas', true)
+        }
+    },
+    actions:{
+
     },
     mounted() {
         this.carregarListaVenda();

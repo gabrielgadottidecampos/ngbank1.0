@@ -1,16 +1,30 @@
 <template>
-    <div class="container">
-        <ul class="list-group">
-            <li class="list-group-item">An item</li>
-        </ul>
-
-        {{funcionarios}}
-        <button type="button" class="btn btn-primary" @click="teste()">Atualizar</button>
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <aniversariantes-component></aniversariantes-component>
+            </div>
+            <div class="carousel-item">
+                <melhoresdodia-component></melhoresdodia-component>
+            </div>
+            <div class="carousel-item">
+                <melhoresdasemana-component></melhoresdasemana-component>
+            </div>
+            <div class="carousel-item">
+                <melhoresdomes-component></melhoresdomes-component>
+            </div>
+            <div class="carousel-item">
+                <equipe-camarote></equipe-camarote>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+
+import EquipeCamarote from "./EquipeCamarote";
 export default {
+    components: {EquipeCamarote},
     computed: {
 // evitando erro de token no navegador *********************************************************************************
         token() {
@@ -23,49 +37,140 @@ export default {
             token = 'Bearer ' + token
 
             return token
-        }
+        },
     },
     data() {
-        return {
-            urlBaseFuncionario: 'http://127.0.0.1:8000/api/v1/venda',
-            funcionarios: [],
-            mes: '',
-            arra: []
-        }
+        return {}
     },
     methods: {
 
-        carregarFuncionarioLista() {
-
-            axios.get(this.urlBaseFuncionario)
-                .then(response => {
-                    console.log(this.funcionarios = response.data)
-                        this.funcionarios.forEach((valor)=>{
-                            console.log(valor.funcionario.nome)
-
-                        })
-                })
-                .catch(errors => {
-                    console.log(errors)
-                })
-        },
-        onChangeMethod(event) {
-            this.equipe_id = event.target.value;
-            console.log(this.equipe_id);
-            this.refsss = this.$refs
-
-
-        },
-        teste(){
-
-        }
-
     },
     mounted() {
-
-         this.carregarFuncionarioLista()
+        $('.carousel').carousel({
+            interval: 5000
+        })
     }
 }
-</script>
 
+</script>
+<style>
+.firstinfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    position: relative;
+    animation: animatop 0.9s cubic-bezier(0.425, 1.14, 0.47, 1.125) forwards;
+}
+
+.cardPrincipal {
+    width: 500px;
+    min-height: 100px;
+    padding: 20px;
+    border-radius: 3px;
+    background-color: white;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.cardPrincipal:after {
+    content: '';
+    display: block;
+    width: 190px;
+    height: 300px;
+    background: #a05f5f;
+    position: absolute;
+    animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
+}
+
+.badgescard {
+    padding: 10px 20px;
+    border-radius: 3px;
+    background-color: #00bcd4;
+    color:#fff;
+    width: 480px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    z-index: -1;
+    left: 10px;
+    bottom: 10px;
+    animation: animainfos 0.5s cubic-bezier(0.425, 1.04, 0.47, 1.105) 0.75s forwards;
+}
+
+.badgescard span {
+    font-size: 1.6em;
+    margin: 0px 6px;
+    opacity: 0.6;
+}
+
+.firstinfo {
+    flex-direction: row;
+    z-index: 2;
+    position: relative;
+}
+
+.firstinfo img {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+}
+
+.firstinfo .profileinfo {
+    padding: 0px 20px;
+}
+
+.firstinfo .profileinfo h1 {
+    font-size: 1.8em;
+}
+
+.firstinfo .profileinfo h3 {
+    font-size: 1.2em;
+    color: #00bcd4;
+    font-style: italic;
+}
+
+.firstinfo .profileinfo p.bio {
+    padding: 10px 0px;
+    color: #5A5A5A;
+    line-height: 1.2;
+    font-style: initial;
+}
+
+@keyframes animatop {
+    0% {
+        opacity: 0;
+        bottom: -500px;
+    }
+    100% {
+        opacity: 1;
+        bottom: 0px;
+    }
+}
+
+@keyframes animainfos {
+    0% {
+        bottom: 10px;
+    }
+    100% {
+        bottom: -42px;
+    }
+}
+
+@keyframes rotatemagic {
+    0% {
+        opacity: 0;
+        transform: rotate(0deg);
+        top: -24px;
+        left: -253px;
+    }
+    100% {
+        transform: rotate(-30deg);
+        top: -24px;
+        left: -78px;
+    }
+}
+</style>
 
