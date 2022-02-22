@@ -52,6 +52,10 @@ Vue.component('melhoresdodia-component', require('./components/MelhoresDia.vue')
 Vue.component('melhoresdomes-component', require('./components/MelhoresDoMes.vue').default);
 Vue.component('aniversariantes-component', require('./components/Aniversariantes.vue').default);
 Vue.component('melhoresdasemana-component', require('./components/MelhoresDaSemana.vue').default);
+Vue.component('vendadias-component', require('./components/vendasDia.vue').default);
+Vue.component('rankequipecamarote-component', require('./components/RankEquipeCamarote.vue').default);
+Vue.component('rankdomes-component', require('./components/RankDoMes.vue').default);
+Vue.component('rankdasemana-component', require('./components/RankDaSemana.vue').default);
 
 
 /**

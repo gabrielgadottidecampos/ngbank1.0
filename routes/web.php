@@ -59,3 +59,15 @@ Route::get('/aniversariantes', function (){
 Route::get('/melhoresdasemana', function (){
     return view('app.melhoresDaSemana');
 })->name('melhoresdasemana')->middleware('auth');
+Route::get('/vendasdia', function (){
+    return view('app.vendasDia');
+})->name('vendasdia')->middleware('auth');
+Route::get('/rankequipecamarote', function (){
+    return view('app.rankEquipeCamarote');
+})->name('rankequipecamarote')->middleware('auth');
+Route::get('/rankdomes', function (){
+    return view('app.rankDoMes');
+})->name('rankdomes')->middleware('auth');
+Route::get('/rankdasemana', function (){
+    return view('app.rankDaSemana');
+})->name('rankdasemana')->middleware('auth');

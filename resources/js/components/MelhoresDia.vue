@@ -1,93 +1,73 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-6 ">
-                <div class="card designCardMelhoresDia">
-                    <div class="card-body designCardMelhoresDia">
-                        <h4 class="header-title pb-3 mt-0 text-center text-white sombratexto">Melhores Do Dia</h4>
-                        <div v-for="(t, key) in  ordenar()" :key="key">
-                            {{incrementIndex(key)}}
-                        <div class="row well well-purple mini-profile-widget rounded shadow p-3 mb-5" v-bind:style="{ background: activeColor}">
-                            <div class="col-md-6">
-                                <div class="image-container mt-3 mb-2">
-                                    <img v-bind:src="/storage/+t.imagem"
-                                         class="avatar img-responsive" alt="avatar" height="130"
-                                         width="130">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="details mt-2 text-white sombratexto">
-                                    <h4>{{t.nome}}</h4>
-                                    <hr>
-                                    <div class="text-white sombratexto">Total Em Vendas</div>
-                                    <h4>
-                                    <span><img src="https://cdn-icons-png.flaticon.com/512/2916/2916103.png" height="60" width="60"> <strong class="text-white sombratexto"> R$ {{t.valor_venda}}</strong></span>
-                                    </h4>
-                                </div>
+    <div class="container bootstrap snippets bootdey">
+        <section id="testimonials" class="content-first">
+            <div class="container bootstrap snippets bootdey">
+                <h1 class="text-center">MELHORES DO DIA</h1>
+{{salvarResuldato() }}
+                <hr>
+                <div class="row" v-if="contador >=1">
+                    <!-- TESTIMONIAL 1 - START -->
+                    <div class="col-sm-6">
+                        <div class="media">
+                            <a class="pull-left" href="#"><img class="media-object img-circle" v-bind:src="/storage/+imagem[0]"  alt=""></a>
+                            <div class="media-body">
+                                <h3 class="media-heading">{{nome[0]}}</h3>
+                                <hr class="hrMelhoresDoDia">
+                                <p><img src="storage/imagens/icons/money.png" width="45" height="45"> R$ {{ valor[0] }} </p>
+                                <hr class="hrMelhoresDoDia">
+                                <img class="tamanhoIconeMelhoresDoDia" src="storage/imagens/icons/1.png">
+
                             </div>
                         </div>
+                    </div>
+                    <!-- TESTIMONIAL 1 - END -->
+                    <div class="col-sm-6" v-if="contador>=2">
+                        <div class="media">
+                            <a class="pull-left" href="#"><img class="media-object img-circle" v-bind:src="/storage/+imagem[1]" alt=""></a>
+                            <div class="media-body">
+                                <h3 class="media-heading">{{nome[1]}}</h3>
+                                <hr class="hrMelhoresDoDia">
+                                <p><img src="storage/imagens/icons/money.png" width="45" height="45"> R${{valor[1]}}</p>
+                                <hr class="hrMelhoresDoDia">
+                                <img class="tamanhoIconeMelhoresDoDia" src="storage/imagens/icons/2.png">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center mt-4" v-if="contador>=3">
+                    <div class="col-sm-6 ">
+                        <div class="media ">
+                            <a class="pull-left" href="#"><img class="media-object img-circle"  v-bind:src="/storage/+imagem[2]" alt=""></a>
+                            <div class="media-body">
+                                <h3 class="media-heading">{{nome[2]}}</h3>
+                                <hr class="hrMelhoresDoDia">
+                                <p><img src="storage/imagens/icons/money.png" width="45" height="45"> R${{valor[2]}}</p>
+                                <hr class="hrMelhoresDoDia">
+                                <img class="tamanhoIconeMelhoresDoDia" src="storage/imagens/icons/3.png">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6">
-                <div class="card designCardMelhoresDia">
-                    <div class="card-body designCardMelhoresDia">
-                        <h4 class="header-title pb-3 mt-0 text-center text-white sombratexto">Ultimas Vendas</h4>
-                        <div class="table ">
-                            <table class="table" v-for="v in  ordenarVendasDia()">
-                                <tbody >
-                                <tr>
-                                    <td class="border-top-1">
-                                        <div class="media"><img v-bind:src="/storage/+v.imagem" alt=""
-                                                                class="thumb-md rounded-circle" height="130"
-                                                                width="130">
-                                            <div class="text-center text-white sombratexto">
-                                                <h4><span class="text-darktext-white sombratexto">{{ v.nome }}</span></h4>
-                                                <hr>
-                                                <h4> <span><img src="https://cdn-icons-png.flaticon.com/512/2916/2916103.png" height="60" width="60"> <strong class="text-white sombratexto"> R$ {{ v.valor_venda }}</strong></span>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
     </div>
-
 </template>
-
 <script>
 export default {
-    computed: {
-// evitando erro de token no navegador *********************************************************************************
-        token() {
-
-            let token = document.cookie.split(';').find(indice => {
-                return indice.includes('token=')
-            })
-
-            token = token.split('=')[1]
-            token = 'Bearer ' + token
-
-            return token
-        }
-    },
     data() {
         return {
+            contador:0,
             urlBaseVenda: 'http://127.0.0.1:8000/api/v1/venda',
             vendas: [],
-            activeColor: 'red',
+            nome: [],
+            imagem: [],
+            valor: [],
         }
     },
 // inicio dos metodos **************************************************************************************************
     methods: {
-        // trazer as informações da api de venda *******************************************************************************
+        // trazer as informações da api de venda ***********************************************************************
         CarregarApiVendas() {
             axios.get(this.urlBaseVenda)
                 .then(response => {
@@ -108,9 +88,10 @@ export default {
                         valor_venda: value.valor_venda,
                         nome: value.funcionario.nome,
                         imagem: value.funcionario.imagem,
-                        Mescreated_at: new Date(value.created_at).getMonth() + 1,
                         Dia: new Date(value.created_at).getUTCDate(),
-                        created_at: value.created_at
+                        Mes: new Date(value.created_at).getMonth() + 1,
+
+                        // created_at: value.created_at
                     };
                     result.push(res[value.id])
                 }
@@ -118,18 +99,22 @@ export default {
             }, {});
             return result
         },
-        filtrarMelhoresDoDia() {
+        // filtrar vendas do dia ***************************************************************************************
+        VendasDia() {
             var data = new Date();
             var result = [];
             var arrayMelhoresDoDia = this.AdicionarData();
             arrayMelhoresDoDia.reduce(function (res, value) {
-                if (value.Mescreated_at == data.getMonth() + 1 && value.Dia == data.getDate()) {
+                if (value.Mes == data.getMonth() + 1 && value.Dia == data.getDate()) {
                     if (!res[value.funcionario_id]) {
                         res[value.funcionario_id] = {
                             funcionario_id: value.funcionario_id,
                             valor_venda: 0,
                             nome: value.nome,
                             imagem: value.imagem,
+                            dia: value.Dia,
+                            mes: value.Mes,
+
                         };
                         result.push(res[value.funcionario_id])
                     }
@@ -141,28 +126,9 @@ export default {
             }, {});
             return result
         },
-        filtrarVendasDoDia() {
-            var data = new Date();
-            var result = [];
-            var arrayMelhoresDoDia = this.AdicionarData();
-            arrayMelhoresDoDia.reduce(function (res, value) {
-                if (value.Mescreated_at == data.getMonth() + 1 && value.Dia == data.getDate()) {
-                    res[value.id] = {
-                        funcionario_id: value.funcionario_id,
-                        valor_venda: value.valor_venda,
-                        nome: value.nome,
-                        imagem: value.imagem,
-                        created_at: value.created_at
-                    };
-                    result.push(res[value.id])
-                }
-
-                return res;
-            }, {});
-            return result
-        },
+        // somar vendas do dia *****************************************************************************************
         ordenar() {
-            var array = this.filtrarMelhoresDoDia();
+            var array = this.VendasDia();
 
             function compare(a, b) {
                 if (a.valor_venda < b.valor_venda)
@@ -173,188 +139,117 @@ export default {
             }
 
             var resultado = array.sort(compare);
+            this.contador = resultado.length
             return resultado.slice(0, 3)
 
         },
-        ordenarVendasDia() {
-            var array = this.filtrarVendasDoDia();
+        salvarResuldato() {
+            var arrayNomes = this.ordenar();
+            if(this.contador >0){
+                for (var i = 0; i < 1; i++) {
+                    if(this.contador<=1){
+                        this.nome[0] = arrayNomes[0].nome
+                        this.valor[0] = arrayNomes[0].valor_venda
+                        this.imagem[0] = arrayNomes[0].imagem
+                    }
+                    else if(this.contador<=2){
+                        for (var item in arrayNomes) {
+                            this.nome[0] = arrayNomes[0].nome
+                            this.nome[1] = arrayNomes[1].nome
+                            this.valor[0] = arrayNomes[0].valor_venda
+                            this.valor[1] = arrayNomes[1].valor_venda
+                            this.imagem[0] = arrayNomes[0].imagem
+                            this.imagem[1] = arrayNomes[1].imagem
+                        }
+                    }
+                    else{
+                        for (var item in arrayNomes) {
+                            this.nome[0] = arrayNomes[0].nome
+                            this.nome[1] = arrayNomes[1].nome
+                            this.nome[2] = arrayNomes[2].nome
+                            this.valor[0] = arrayNomes[0].valor_venda
+                            this.valor[1] = arrayNomes[1].valor_venda
+                            this.valor[2] = arrayNomes[2].valor_venda
+                            this.imagem[0] = arrayNomes[0].imagem
+                            this.imagem[1] = arrayNomes[1].imagem
+                            this.imagem[2] = arrayNomes[2].imagem
+                        }
+                    }
 
-            function compare(a, b) {
-                if (a.created_at < b.created_at)
-                    return 1;
-                if (a.created_at > b.created_at)
-                    return -1;
-                return 0;
+
+                }
             }
 
-            var resultado = array.sort(compare);
-            return resultado.slice(0, 5)
 
-        },
-        incrementIndex(key) {
-            if(key == 0){
-                this.activeColor = '#ffd700';
-            }else if(key == 1){
-                this.activeColor = '#c0c0c0';
-            }else if(key == 2){
-                this.activeColor = '#9c5221';
-            }else{
-                this.activeColor = '#ffffff';
-            }
-        },
+        }
 
     },
+
     mounted() {
         this.CarregarApiVendas(); // irá carregar o método
+        //this.salvarResuldato();
     }
-
 }
 </script>
 <style>
-.bordaPretaImagem {
-    border: 1px solid #000000;
-}
-.sombratexto{
-    text-shadow: black 0.1em 0.1em 0.2em
+
+.content-first {
+    padding: 5px 0;
+    color: #FFFFFF;
+    border-top: 8px inset #333;
+    border-top: 8px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
 }
 
-/* Component: Well */
-.well {
+.media, .media-body {
     overflow: hidden;
-    border-radius: 0;
-    margin-bottom: 30px;
+    zoom: 1;
 }
 
-.well .well-heading .controls {
-    position: absolute;
-    top: 10px;
-    right: 30px;
+#testimonials .media a.pull-left img {
+    max-width: 150px;
 }
 
-.well .well-body {
-    margin-top: 20px;
-    position: relative;
-    z-index: 3;
+#testimonials .media .media-body {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 15px 20px;
+    border-radius: 12px;
 }
 
-.well .well-image {
-    font-size: 90px;
-    line-height: 90px;
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    z-index: 1;
-    color: rgba(0, 0, 0, 0.15);
-    -webkit-transition: all 0.2s ease-in;
-    -moz-transition: all 0.2s ease-in;
-    -ms-transition: all 0.2s ease-in;
-    -o-transition: all 0.2s ease-in;
-    transition: all 0.2s ease-in;
+#testimonials .media .media-body h3 {
+    margin: 0;
+    font-weight: bold;
+    font-size: 26px;
 }
 
-.well:hover .well-image {
-    font-size: 60px;
-}
-
-
-.well-purple {
-    background-color: #8e44ad;
-    color: white;}
-
-
-.mini-profile-widget .image-container .avatar {
-    width: 180px;
-    height: 180px;
+#testimonials .media .media-body span {
+    margin: 5px 0 15px;
     display: block;
-    margin: 0 auto;
-    border-radius: 50%;
-    background: white;
-    padding: 4px;
-    border: 1px solid #dddddd;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 14px;
+    color: #333;
 }
 
-.btn-blue {
-    background-color: #3498db;
-    border-color: #3498db;
-    color: white;
+#testimonials .media .media-body p {
+    margin: 0;
+    padding: 5px 0 0;
+    border-top: 1px dashed rgba(0, 0, 0, 0.2);
+    text-align: left;
+    line-height: 25px;
+    font-size: 20px;
 }
 
-.btn-blue:hover,
-.btn-blue:visited {
-    background-color: #2980b9;
-    color: white;
+.tamanhoIconeMelhoresDoDia {
+    weight: 50px;
+    height: 50px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
 }
 
-.btn-green {
-    background-color: #2ecc71;
-    border-color: #27ae60;
-    color: white;
-}
-
-.btn-green:hover,
-.btn-green:visited {
-    background-color: #27ae60;
-    color: white;
-}
-
-.btn-orange {
-    background-color: #ff530d;
-    border-color: #e82c0c;
-    color: white;
-}
-
-.btn-orange:hover,
-.btn-orange:visited {
-    background-color: #e82c0c;
-    color: white;
-}
-
-.btn-red {
-    background-color: #ff1d23;
-    border-color: #d40d12;
-    color: white;
-}
-
-.btn-red:hover,
-.btn-red:visited {
-    background-color: #d40d12;
-    color: white;
-}
-
-.btn-purple {
-    background-color: #9b59b6;
-    border-color: #8e44ad;
-    color: white;
-}
-
-.btn-purple:hover,
-.btn-purple:visited {
-    background-color: #8e44ad;
-    color: white;
-}
-
-.btn-pink {
-    background-color: #fd32c0;
-    border-color: #fe31ab;
-    color: white;
-}
-
-.btn-pink:hover,
-.btn-pink:visited {
-    background-color: #fe31ab;
-    color: white;
-}
-.designCardMelhoresDia{
-    padding: 0.25rem;
-    border-radius: 1.25rem;
-    background-color: #ffffff57;
-}
-.tabelaTamanhoMelhoresdoDia{
-    margin-bottom: 0.7rem
-}
-.displayflexMelhoresdodia{
-    display: flex;
-    align-items: center;
+.hrMelhoresDoDia {
+    border-top: 1px solid white;
 }
 </style>
 
